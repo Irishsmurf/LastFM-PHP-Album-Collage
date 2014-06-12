@@ -205,17 +205,6 @@ if ($url['host'] !== $_SERVER['HTTP_HOST'] && $referer != 'an unknown url/direct
 							$i = $i + 1;
 						}
 						
-
-						
-						#for($i = 0; $i <= $width; $i += 1)
-						#{
-						#	imageline($myImg, $contentSize * $i , 0 , $contentSize * $i, $contentSize * $len,$white);
-						#}
-						#for($i = 0; $i <= $len; $i += 1)
-						#{
-						#	imageline($myImg, 0, $contentSize * $i, $contentSize*$width, $contentSize*$i, $white);
-						#}
-							
 						$avg = $avg/$m;
 						$path = "i/$name$period$m.jpg";
 
