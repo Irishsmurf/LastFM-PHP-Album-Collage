@@ -86,9 +86,9 @@ if ($url['host'] !== $_SERVER['HTTP_HOST'] && $referer != 'an unknown url/direct
 			
 			//Require AWS Keys for S3 storage
 			if(!defined('awsAccessKey')) 
-				define('awsAccessKey', $config['accessKey']);//'AKIAIK7MYGVKHI3BRRGA');
+				define('awsAccessKey', $config['accessKey']);
 			if(!defined('awsSecretKey')) 
-				define('awsSecretKey', $config['secretKey']); //'dm/ZzGf4fxNenHK4RqxotENPa9gHPRtnirbsCIUl');
+				define('awsSecretKey', $config['secretKey']);
 		
 			
 			function uploadS3($path, $key)
