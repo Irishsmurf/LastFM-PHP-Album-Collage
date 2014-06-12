@@ -1,3 +1,29 @@
+<?php
+
+include_once('config.inc.php');
+$file = "refers.txt";
+$genTimes = "genTime.txt";
+$log_ip = 1;
+$url = parse_url($_SERVER['HTTP_REFERER']);
+$referer = (!isset($_SERVER['HTTP_REFERER']) || $_SERVER['HTTP_REFERER'] == '') ? 'an unknown url/direct access (typing in URL)' : $_SERVER['HTTP_REFERER'];
+$ip = ($log_ip == 1) ? $_SERVER['REMOTE_ADDR'] : false;
+$time = gmdate("Y-m-d\T H:i:s\Z");
+$user_text  = ($log_ip == 1) ? "On {$time} {$ip}" : "On {$time} a user";
+$refer_text = "{$referer}";
+$fw = fopen("hits.txt", 'a');
+fwrite($fw, $user_text."\n");
+fclose($fw);
+
+if ($url['host'] !== $_SERVER['HTTP_HOST'] && $referer != 'an unknown url/direct access (typing in URL)')
+{
+
+	$fp = fopen($file, 'a');
+	fwrite($fp, $user_text." hit from referrer: "."{$refer_text} \n");
+	fclose($fp);
+
+}
+
+?>
 <!doctype html>
 <html lang="en">
 
@@ -20,12 +46,22 @@
 		
 	}
 	</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-48104767-1', 'paddez.com');
+  ga('send', 'pageview');
+
+</script>
 </head>
 
 
 <body>
 <div class="topbanner">
-<h1>Paddez's Site of Awesomeness</h1>
+<h1>~/paddez/projects/lastfm</h1>
 </div>
 <br />
 <br />
@@ -44,22 +80,28 @@
 <h2>Last.fm Album Collage Generator</h2>
 </header><center>
 <p>
-			<?php 
-// function imagettfstroketext(&$image, $size, $angle, $x, $y, &$textcolor, &$strokecolor, $fontfile, $text, $px) {
- 
-    // for($c1 = ($x-abs($px)); $c1 <= ($x+abs($px)); $c1++)
-        // for($c2 = ($y-abs($px)); $c2 <= ($y+abs($px)); $c2++)
-            // $bg = imagettftext($image, $size, $angle, $c1, $c2, $strokecolor, $fontfile, $text);
- 
-   // return imagettftext($image, $size, $angle, $x, $y, $textcolor, $fontfile, $text);
-// }
-								//To Do -- Captions
-								// $black = imagecolorallocate($image, 0, 0, 0);
-								// $white = imagecolorallocate($image, 255,255,255);
-								 // $px = (imagesx($image) * (70/100));
-								 // $py = (imagesy($image) * (90/100));
-								 // imagettfstroketext($image, $fontSize, 0, $px, $py, $white, $black, "i/mono.ttf", "Band Name", 1);
-								 // imagettfstroketext($image, $fontSize, 0, $px, $py+$fontSize, $white, $black, "i/mono.ttf", "Album Name", 1);
+<?php 
+			if(!class_exists('S3')) 
+				require_once 'S3.php';
+			
+			//Require AWS Keys for S3 storage
+			if(!defined('awsAccessKey')) 
+				define('awsAccessKey', $config['accessKey']);//'AKIAIK7MYGVKHI3BRRGA');
+			if(!defined('awsSecretKey')) 
+				define('awsSecretKey', $config['secretKey']); //'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');
+		
+			
+			function uploadS3($path, $key)
+			{
+				$bucketName = 'lastfm-img-paddez';
+				if(!file_exists($path) || !is_file($path))
+				{
+					exit("\nERROR: NO FILE");
+				}
+
+				$s3 = new S3(awsAccessKey, awsSecretKey);
+				$s3->putObjectFile($path, $bucketName, $key, S3::ACL_PUBLIC_READ, array('Cache-Control' => 'must-revalidate'));
+			}
 			$time = microtime(true);
 			$avg = 0;
 			$name = $_POST['name'];
@@ -165,24 +207,28 @@
 						
 
 						
-						for($i = 0; $i <= $width; $i += 1)
-						{
-							imageline($myImg, $contentSize * $i , 0 , $contentSize * $i, $contentSize * $len,$white);
-						}
-						for($i = 0; $i <= $len; $i += 1)
-						{
-							imageline($myImg, 0, $contentSize * $i, $contentSize*$width, $contentSize*$i, $white);
-						}
+						#for($i = 0; $i <= $width; $i += 1)
+						#{
+						#	imageline($myImg, $contentSize * $i , 0 , $contentSize * $i, $contentSize * $len,$white);
+						#}
+						#for($i = 0; $i <= $len; $i += 1)
+						#{
+						#	imageline($myImg, 0, $contentSize * $i, $contentSize*$width, $contentSize*$i, $white);
+						#}
 							
 						$avg = $avg/$m;
 						$path = "i/$name$period$m.jpg";
 
 						imagejpeg($myImg, $path, 100);
 						chmod($path, 0644);
+						uploadS3($path, 'lastfm/'.basename($path));
 						imagecopyresampled( $resize, $myImg, 0, 0, 0, 0, 100*$width, 100*$len, $contentSize*$width, $contentSize*$len);
 						imagejpeg($resize, "i/php/$name$period$m.jpg", 100);
+						uploadS3("i/php/$name$period$m.jpg", "lastfm/thumb/$name$period$m.jpg");
 						chmod("i/php/$name$period$m.jpg", 0644);
 						
+
+
 						if(strlen($name) > 1)
 						{
 						$bbcode = "<textarea rows = \"3\" cols = \"120\"  readonly>[url=http://www.redbrick.dcu.ie/~paddez/projects/lastfm/][img]http://www.redbrick.dcu.ie/~paddez/projects/lastfm/lastfm.php?name=$name&period=$period&width=$width&length=$len [/img][/url]</textarea>";
@@ -191,14 +237,23 @@
 						{
 							$time = round(microtime(true) - $time, 3);
 							echo "Click the image for full size";
-							echo "<a href = \"http://www.redbrick.dcu.ie/~paddez/projects/lastfm/$path\"><img src=\"http://www.redbrick.dcu.ie/~paddez/projects/lastfm/i/php/$name$period$m.jpg\" name=\"place\"></img></a><br />";
-							echo "Generated in ".$time . " seconds (Average ".round($avg, 3)."s per album)";
+							echo "<a href = \"http://cdn.paddez.com/lastfm/".basename($path)."\"><img src=\"http://cdn.paddez.com/lastfm/thumb/$name$period$m.jpg\" name=\"place\"></img></a><br />";
+							$outText = "Generated in ".$time . " seconds (Average ".round($avg, 3)."s per album)";
+							echo $outText;					
+							$fp = fopen($genTimes, 'a');
+							fwrite($fp, $outText."\n");
+							fclose($fp);
 						}
 						else
 						{
 							$time = round(microtime(true) - $time, 3);
-							echo "<img src=\"http://www.redbrick.dcu.ie/~paddez/projects/lastfm/$path\" name=\"place\"></img><br />";
-							echo "Generated in ".$time . " seconds (Average ".round($avg, 3)."s per album)";
+							echo "<img src=\"http://cdn.paddez.com/lastfm/".basename($path)."\" name=\"place\"></img><br />";
+//							echo "Generated in ".$time . " seconds (Average ".round($avg, 3)."s per album)";
+							$outText = "Generated in ".$time . " seconds (Average ".round($avg, 3)."s per album)";
+							echo $outText;
+							$fp = fopen($genTimes, 'a');
+							fwrite($fp, $outText."\n");
+							fclose($fp);
 						}
 						
 						imagedestroy($resize);
@@ -296,8 +351,7 @@ Follow Me At
 <header>
 <h3>About</h3>
 </header>
-<p>I am an <?php echo (date("Y") - date("Y", strtotime('1991-10-08'))) +  (date("md") >= date("md", strtotime("1991-10-08")) ? 0: -1); ?> year old student, currently studying for a Software Engineering Degree in Dublin City University. I will be using this site for things I have been working on in my spare time. </p>
-</section>
+<p>Create an album collage from your Last.fm scrobbles</p></section>
 <section id ="links">
 <header>
 <h3> Links </h3>
