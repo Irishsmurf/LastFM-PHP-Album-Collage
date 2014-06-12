@@ -3,5 +3,5 @@ Uses S3 to store the images in a persistant manner without filling up the local 
 
 Requires a config.inc.php file to include you AWS Access Keys in the form of:
 
-$config['accessKey' = '<AWS Access Key>';
-$config['secretKey' = '<SecretKey>';
+$config['accessKey'] = '<AWS Access Key>';
+$config['secretKey'] = '<SecretKey>';
