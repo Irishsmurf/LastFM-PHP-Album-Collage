@@ -28,6 +28,21 @@ if ($url['host'] !== $_SERVER['HTTP_HOST'] && $referer != 'an unknown url/direct
 <html lang="en">
 
 <head>
+<meta name="twitter:card" content="photo">
+<meta name="twitter:site" content="irishsmurf">
+	<meta name="twitter:creator" content="">
+	<meta name="twitter:title" content="">
+	<meta name="twitter:image:src" content="">
+	<meta name="twitter:domain" content="">
+	<meta name="twitter:app:name:iphone" content="">
+	<meta name="twitter:app:name:ipad" content="">
+	<meta name="twitter:app:name:googleplay" content="">
+	<meta name="twitter:app:url:iphone" content="">
+	<meta name="twitter:app:url:ipad" content="">
+	<meta name="twitter:app:url:googleplay" content="">
+	<meta name="twitter:app:id:iphone" content="">
+	<meta name="twitter:app:id:ipad" content="">
+	<meta name="twitter:app:id:googleplay" content="">
 	<title>Paddez</title>
    	<link rel="stylesheet" href="/~paddez/style.css" type="text/css" media="screen" />
     <link rel="SHORTCUT ICON" href="/~paddez/images/faviocon.ico">
@@ -138,7 +153,7 @@ if ($url['host'] !== $_SERVER['HTTP_HOST'] && $referer != 'an unknown url/direct
 				{
 					include "../../proxy.php";
 					header("User-Agent" . ": Last.fm/Album Collage");
-					$user_url = "http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=$name&period=$period&api_key=990bffa4bfec47d7e826740f266d3e75";
+					$user_url = "http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=$name&period=$period&limit=50&api_key=990bffa4bfec47d7e826740f266d3e75";
 					$ch = curl_init();
 					$needle = "<image size=\"large\">";
 					$endneedle = "</image>";
@@ -340,7 +355,8 @@ Follow Me At
 <header>
 <h3>About</h3>
 </header>
-<p>Create an album collage from your Last.fm scrobbles</p></section>
+<p>Create an album collage from your Last.fm scrobbles</p>
+<p>If you run into any issues or have any suggestions for the LastFM tool- please drop me a mail at dave@paddez.com. Thanks!</p></section>
 <section id ="links">
 <header>
 <h3> Links </h3>
