@@ -29,6 +29,25 @@ include('config.inc.php');
 include('aws-autoloader.php');
 
 use Aws\S3\S3Client;
+use Aws\S3\Exception\S3Exception;
+
+
+function createImageFromFile($filename, $use_include_path = false, $context = null, &$info = null)
+{
+  // try to detect image informations -> info is false if image was not readable or is no php supported image format (a  check for "is_readable" or fileextension is no longer needed)
+  $info = array("image"=>getimagesize($filename));
+  $info["image"] = getimagesize($filename);
+  if($info["image"] === false) throw new InvalidArgumentException("\"".$filename."\" is not readable or no php supported format");
+  else
+  {
+    // fetches fileconten from url and creates an image ressource by string data
+    // if file is not readable or not supportet by imagecreate FALSE will be returnes as $imageRes
+    $imageRes = imagecreatefromstring(file_get_contents($filename, $use_include_path, $context));
+    // export $http_response_header to have this info outside of this function
+    if(isset($http_response_header)) $info["http"] = $http_response_header;
+    return $imageRes;
+  }
+}
 
 function getJson($url)
 {
@@ -49,10 +68,55 @@ function getJson($url)
     return $decoded;
 }
 
-function getLowQualityArt($albums)
+function downloadImage($url)
 {
-
+    return createImageFromFile($url);
 }
+
+function createCollage($covers, $quality ,$totalSize, $width, $length)
+{
+    switch ($quality)
+    {
+        case 0:
+            $pixels = 34;
+            break;
+        case 1:
+            $pixels = 64;
+            break;
+        case 2:
+            $pixels = 126;
+            break;
+        case 3:
+            $pixels = 300;
+            break;
+    }
+
+    $canvas = imagecreatetruecolor($pixels * $width, $pixels * $length);
+    $backgroundColor = imagecolorallocate($canvas, 255, 255, 255);
+    imagefill($canvas, 0, 0, $backgroundColor);
+    
+    $coords['x'] = 0;
+    $coords['y'] = 0;
+
+    $i = 1;
+    foreach($covers as $cover)
+    {
+        $image = downloadImage($cover);
+        imagecopy($canvas, $image, $coords['x'], $coords['y'], 0, 0, $pixels, $pixels);
+        $coords['x'] += $pixels;
+        
+        if($i % $width == 0)
+        {
+            $coords['y'] += $pixels;
+        }
+
+        $i++;
+
+    }
+
+    return $canvas;
+}
+
 
 function getArt($albums, $quality)
 {
@@ -70,7 +134,7 @@ function getArt($albums, $quality)
         $i++;
     }
 
-    print_r($artUrl);
+    return $artUrl;
 }
 
 function getAlbums($url)
@@ -89,7 +153,7 @@ $s3 = S3Client::factory(array(
 
 //Parses the $vars and assigns the values as in the URL. $name and $period expected here.
 #parse_str($url);
-$width = 30;
+$width = 3;;
 $length = 3;
 $request['user'] = 'irishsmurf';
 $request['period'] = 'overall';
@@ -100,15 +164,16 @@ $limit = $request['width'] * $request['length'];
 $lastfmApi = "http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=".$request['user']."&period=".$request['period']."&api_key=".$config['api_key']."&limit=$limit&format=json";
 $noimage = "http://cdn.last.fm/flatness/catalogue/noimage/2/default_album_medium.png";
 
-echo "\n$lastfmApi\n\n";
+//echo "\n$lastfmApi\n\n";
 $albums = getAlbums($lastfmApi);
 
-foreach($albums as $album)
-{
-    echo $album->{'name'}." - ".$album->{'artist'}->{'name'}."\n";
-}
+//getArt($albums, 3);
 
-getArt($albums, 3);
+$covers = getArt($albums, 3);
+header("Content-Type: image/jpeg");
 
+$image = createCollage($covers, 3, 0, $width, $length);
 
+imagejpeg($image);
+imagedestroy($image);
 ?>
