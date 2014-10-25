@@ -34,16 +34,13 @@ use Aws\S3\Exception\S3Exception;
 
 function createImageFromFile($filename, $use_include_path = false, $context = null, &$info = null)
 {
-  // try to detect image informations -> info is false if image was not readable or is no php supported image format (a  check for "is_readable" or fileextension is no longer needed)
   $info = array("image"=>getimagesize($filename));
   $info["image"] = getimagesize($filename);
   if($info["image"] === false) throw new InvalidArgumentException("\"".$filename."\" is not readable or no php supported format");
   else
   {
-    // fetches fileconten from url and creates an image ressource by string data
-    // if file is not readable or not supportet by imagecreate FALSE will be returnes as $imageRes
     $imageRes = imagecreatefromstring(file_get_contents($filename, $use_include_path, $context));
-    // export $http_response_header to have this info outside of this function
+    
     if(isset($http_response_header)) $info["http"] = $http_response_header;
     return $imageRes;
   }
@@ -101,13 +98,16 @@ function createCollage($covers, $quality ,$totalSize, $width, $length)
     $i = 1;
     foreach($covers as $cover)
     {
+        if(strpos($cover, 'noimage'))
+            continue;
         $image = downloadImage($cover);
         imagecopy($canvas, $image, $coords['x'], $coords['y'], 0, 0, $pixels, $pixels);
         $coords['x'] += $pixels;
         
         if($i % $width == 0)
         {
-            $coords['y'] += $pixels;
+            $coords['y'] += 300;
+            $coords['x'] = 0;
         }
 
         $i++;
@@ -153,8 +153,8 @@ $s3 = S3Client::factory(array(
 
 //Parses the $vars and assigns the values as in the URL. $name and $period expected here.
 #parse_str($url);
-$width = 3;;
-$length = 3;
+$width = 10;
+$length = 10;
 $request['user'] = 'irishsmurf';
 $request['period'] = 'overall';
 $request['width'] = $width;
@@ -162,7 +162,6 @@ $request['length'] = $length;
 $limit = $request['width'] * $request['length'];
 
 $lastfmApi = "http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=".$request['user']."&period=".$request['period']."&api_key=".$config['api_key']."&limit=$limit&format=json";
-$noimage = "http://cdn.last.fm/flatness/catalogue/noimage/2/default_album_medium.png";
 
 //echo "\n$lastfmApi\n\n";
 $albums = getAlbums($lastfmApi);
