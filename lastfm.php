@@ -145,7 +145,8 @@ function getAlbums($url)
 
 $s3 = S3Client::factory(array(
     'key' => $config['accessKey'],
-    'secret' => $config['secretKey']));
+    'secret' => $config['secretKey'],
+    'region' => 'eu-west-1'));
 
 
 #$url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; 
@@ -153,26 +154,39 @@ $s3 = S3Client::factory(array(
 
 //Parses the $vars and assigns the values as in the URL. $name and $period expected here.
 #parse_str($url);
-$width = 10;
-$length = 10;
+$width = 3;
+$length = 3;
 $request['user'] = 'irishsmurf';
 $request['period'] = 'overall';
 $request['width'] = $width;
 $request['length'] = $length;
 $limit = $request['width'] * $request['length'];
+$bucket = $config['bucket'];
+$key = "images/".$request['period']."/".$request['width']*$request['length']."/".$request['user'].".jpg";
 
 $lastfmApi = "http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=".$request['user']."&period=".$request['period']."&api_key=".$config['api_key']."&limit=$limit&format=json";
 
-//echo "\n$lastfmApi\n\n";
 $albums = getAlbums($lastfmApi);
-
-//getArt($albums, 3);
-
 $covers = getArt($albums, 3);
-header("Content-Type: image/jpeg");
-
 $image = createCollage($covers, 3, 0, $width, $length);
+$filepath = tempnam(null, null);
 
-imagejpeg($image);
+//header("Content-Type: image/jpeg");
+//imagejpeg($image);
+imagejpeg($image, $filepath, 100);
+
+
+$result = $s3->putObject(array(
+    'Bucket' => $bucket,
+    'Key'   => $key,
+    'SourceFile' => $filepath,
+    'ACL'   => 'public-read',
+    'ContentType' => 'image/jpeg'
+    ));
+
+unlink($filepath);
 imagedestroy($image);
+
+echo '<img href="https://cdn.paddez.com/'.$key.'"></img>'
+
 ?>
