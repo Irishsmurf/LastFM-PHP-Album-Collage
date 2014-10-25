@@ -171,8 +171,8 @@ $covers = getArt($albums, 3);
 $image = createCollage($covers, 3, 0, $width, $length);
 $filepath = tempnam(null, null);
 
-//header("Content-Type: image/jpeg");
-//imagejpeg($image);
+header("Content-Type: image/jpeg");
+imagejpeg($image);
 imagejpeg($image, $filepath, 100);
 
 
@@ -186,7 +186,4 @@ $result = $s3->putObject(array(
 
 unlink($filepath);
 imagedestroy($image);
-
-echo '<img href="https://cdn.paddez.com/'.$key.'"></img>'
-
 ?>
