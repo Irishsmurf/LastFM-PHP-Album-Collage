@@ -1,5 +1,6 @@
 <?php
 /*
+    t
 	Last.fm Album Collage
 	David Kernan
 	
@@ -44,26 +45,42 @@ function getJson($url)
     }
 
     curl_close($curl);
-    $decoded = json_decode($reponse);
+    $decoded = json_decode($response);
     return $decoded;
+}
+
+function getAlbums($url)
+{
+    $json = getJson($url);
+    return $json->{'topalbums'}->{'album'};
 }
 
 $s3 = S3Client::factory(array(
     'key' => $config['accessKey'],
     'secret' => $config['secretKey']));
 
-$lastfmApi = "http://ws.audioscrobbler.com/2.0/?method=tag.gettopalbums&tag=disco&api_key=".$config['api_key']."&format=json";
 
-$url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; 
-$url = substr($url, strpos($url, '?')+1);
+#$url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; 
+#$url = substr($url, strpos($url, '?')+1);
 
 //Parses the $vars and assigns the values as in the URL. $name and $period expected here.
-parse_str($url);
-$request['name'] = strtolower($name);
-$request['period'] = strtolower($period);
+#parse_str($url);
+$width = 30;
+$length = 3;
+$request['user'] = 'irishsmurf';
+$request['period'] = 'overall';
 $request['width'] = $width;
 $request['length'] = $length;
+$limit = $request['width'] * $request['length'];
 
+$lastfmApi = "http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=".$request['user']."&period=".$request['period']."&api_key=".$config['api_key']."&limit=$limit&format=json";
 $noimage = "http://cdn.last.fm/flatness/catalogue/noimage/2/default_album_medium.png";
 
+echo "\n$lastfmApi\n\n";
+$albums = getAlbums($lastfmApi);
+
+foreach($albums as $album)
+{
+    echo $album->{'name'}." - ".$album->{'artist'}->{'name'}."\n";
+}
 ?>
