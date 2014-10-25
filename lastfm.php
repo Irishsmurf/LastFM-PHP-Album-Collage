@@ -8,6 +8,7 @@
 	Version 0.7 = 10/6/2011
 	Version 0.9 = 02/8/2011
 	
+    Version 0.95 26/10/2014 - Upgraded to S3 & Rejigged code.
 	
 	0.5
 		Minor Bugfixes
@@ -22,6 +23,26 @@
 		Included Higher Definition Collages
 */
 //Grabs the query included in the URL.
+
+include('config.inc.php');
+include('aws-autoloader.php');
+
+use Aws\S3\S3Client;
+
+$s3 = S3Client::factory(array(
+    'key' => $config['accessKey'],
+    'secret' => $config['secretKey']));
+
+$result = $s3->listObjects(array(
+    'Bucket' => 'lastfm-img-paddez'));
+
+foreach($result as $object)
+{
+    echo $object['Key']."\n";
+}
+
+$lastfmApi = "http://ws.audioscrobbler.com/2.0/?method=tag.gettopalbums&tag=disco&api_key=".$config['api_key']."&format=json";
+
 $url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; 
 $url = substr($url, strpos($url, '?')+1);
 //Parses the $vars and assigns the values as in the URL. $name and $period expected here.
@@ -36,6 +57,8 @@ $noimage = "http://cdn.last.fm/flatness/catalogue/noimage/2/default_album_medium
 $time = filemtime($path);
 //Checks if a file exists and is older than 2 hours. If so it outputs the image in the cache
 
+$lastfmApi = "http://ws.audioscrobbler.com/2.0/?method=tag.gettopalbums&user=$name&period=$period&api_key=".$config['api_key']."&format=json";
+
 if(file_exists($path) && $time > time() - 18000 )
 {
 	header ("Content-type: image/jpeg");
@@ -45,32 +68,12 @@ if(file_exists($path) && $time > time() - 18000 )
  	header($ExpStr);
 	readfile($path);	
 }
-/*else if(file_exists($path) && $time > time() - 604800 && $period != "7day")
-{
-	header("Content Type: image/jpeg");
-	header("Cache-Control: must-revalidate");
-	$offset = 60 * 10;
-	$ExpStr = "Expires: " . gmdate("D, d M Y H:i:s", time() + $offset) . " GMT";
-	header(ExpStr);
-	readfile($path);
-}*/
 else if($time < time() - 18000) //Or else it fetches a new image
 {
-	/*if($file_exists($path))
-	{
-		header("Content-type: image/jpeg");
-		header("Cache-Control: must-revalidate");
-		$offset = 60*10;
-		$ExpStr = "Expires: " . gmdate("D, d M Y H:i:s", time() + $offset) . " GMT";
-		header($ExpStr);
-		readfile($path);
-		$output = true;
-	}
-*/
-	include "../../proxy.php";
 	//Include a User Agent for the XML Query
 	header("User-Agent" . ": Last.fm/Album Collage");
-	$user_url = "http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=$name&period=$period&api_key=990bffa4bfec47d7e826740f266d3e75";
+    $user_url = $lastfmApi;
+    echo $user_url;
 	$ch = curl_init();
 	//Large Images are defined by this tag.
 	$needle = "<image size=\"large\">";
