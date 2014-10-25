@@ -49,6 +49,30 @@ function getJson($url)
     return $decoded;
 }
 
+function getLowQualityArt($albums)
+{
+
+}
+
+function getArt($albums, $quality)
+{
+    /*
+        0 = Low (34)
+        1 = Medium (64s)
+        2 = Large (126)
+        3 = xlarge (300)
+    */
+    $i = 0;
+    $artUrl = null;
+    foreach($albums as $album)
+    {
+        $artUrl[$i] = $album->{'image'}[$quality]->{'#text'};
+        $i++;
+    }
+
+    print_r($artUrl);
+}
+
 function getAlbums($url)
 {
     $json = getJson($url);
@@ -83,4 +107,8 @@ foreach($albums as $album)
 {
     echo $album->{'name'}." - ".$album->{'artist'}->{'name'}."\n";
 }
+
+getArt($albums, 3);
+
+
 ?>
