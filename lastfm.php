@@ -143,6 +143,19 @@ function getAlbums($url)
     return $json->{'topalbums'}->{'album'};
 }
 
+if(!defined($config))
+{
+	//if not defined, use Environment variables
+	$config['bucket'] = $_ENV["bucket"];
+	$config['api_key'] = $_ENV["api_key"];
+	$config['accessKey'] = $_ENV["accessKey"];
+	$config['secretKey'] = $_ENV["secretKey"];
+	$config[''] = $_ENV[""];
+	$config[''] = $_ENV[""];
+
+}
+
+
 $s3 = S3Client::factory(array(
     'key' => $config['accessKey'],
     'secret' => $config['secretKey'],
