@@ -44,8 +44,8 @@ if ($url['host'] !== $_SERVER['HTTP_HOST'] && $referer != 'an unknown url/direct
 	<meta name="twitter:app:id:ipad" content="">
 	<meta name="twitter:app:id:googleplay" content="">
 	<title>Paddez</title>
-   	<link rel="stylesheet" href="/~paddez/style.css" type="text/css" media="screen" />
-    <link rel="SHORTCUT ICON" href="/~paddez/images/faviocon.ico">
+   	<link rel="stylesheet" href="https://www.paddez.com/style.css" type="text/css" media="screen" />
+    <link rel="SHORTCUT ICON" href="https://www.paddez.com/images/faviocon.ico">
 	<script>
 	if(document.images)
 	{
