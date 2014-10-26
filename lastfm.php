@@ -1,5 +1,6 @@
 <?php
 /*
+    t
 	Last.fm Album Collage
 	David Kernan
 	
@@ -7,8 +8,8 @@
 	Version 0.6 = 17/9/2010
 	Version 0.7 = 10/6/2011
 	Version 0.9 = 02/8/2011
-	
-	
+    Version 0.95 = 26/10/2014
+
 	0.5
 		Minor Bugfixes
 	
@@ -20,126 +21,197 @@
 	0.9
 		Updated Webpage to include loading
 		Included Higher Definition Collages
+
+	0.95
+		Elastic Beanstalk Support
+		Amazon S3 Support
+		Total code refiguration to make a bit more sense
+
+
 */
 //Grabs the query included in the URL.
+
+include('config.inc.php');
+include('aws-autoloader.php');
+
+use Aws\S3\S3Client;
+use Aws\S3\Exception\S3Exception;
+
+
+function getJson($url)
+{
+    $curl = curl_init($url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_USERAGENT, 'www.paddez.com/lastfm/');
+    $response = curl_exec($curl);
+
+    if($response == false)
+    {
+        $info = curl_getinfo($curl);
+        curl_close($curl);
+        die('Error: '.var_export($info));
+    }
+
+    curl_close($curl);
+    $decoded = json_decode($response);
+    return $decoded;
+}
+
+function getImages($coverUrls)
+{
+	$chs = array();
+	$responses = array();
+	$running = null;
+	$mh = curl_multi_init();
+	$i = 0;
+	foreach($coverUrls as $url)
+	{
+		$chs[$i] = curl_init($url);
+		curl_setopt($chs[$i], CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($chs[$i], CURLOPT_USERAGENT, 'www.paddez.com/lastfm/');
+
+		curl_multi_add_handle($mh, $chs[$i]);
+		$i++;
+	}
+	do
+	{
+		curl_multi_exec($mh, $running);
+		curl_multi_select($mh);
+	} while($running > 0);
+	
+	$i = 0;
+	foreach($chs as $ch)
+	{
+		$images[$i] = curl_multi_getcontent($ch);
+		curl_multi_remove_handle($mh, $ch);
+        $i++;
+	}
+
+	curl_multi_close($mh);
+	return $images;
+}
+
+function createCollage($covers, $quality ,$totalSize, $width, $length)
+{
+    switch ($quality)
+    {
+        case 0:
+            $pixels = 34;
+            break;
+        case 1:
+            $pixels = 64;
+            break;
+        case 2:
+            $pixels = 126;
+            break;
+        case 3:
+            $pixels = 300;
+            break;
+    }
+
+    $canvas = imagecreatetruecolor($pixels * $width, $pixels * $length);
+    $backgroundColor = imagecolorallocate($canvas, 255, 255, 255);
+    imagefill($canvas, 0, 0, $backgroundColor);
+    
+    $coords['x'] = 0;
+    $coords['y'] = 0;
+
+    $i = 1;
+	$images = getImages($covers);
+    foreach($images as $rawdata)
+    {
+		$image = imagecreatefromstring($rawdata);
+        imagecopy($canvas, $image, $coords['x'], $coords['y'], 0, 0, $pixels, $pixels);
+        $coords['x'] += $pixels;
+        
+        if($i % $width == 0)
+        {
+            $coords['y'] += 300;
+            $coords['x'] = 0;
+        }
+
+        $i++;
+
+    }
+
+    return $canvas;
+}
+
+
+function getArt($albums, $quality)
+{
+    /*
+        0 = Low (34)
+        1 = Medium (64s)
+        2 = Large (126)
+        3 = xlarge (300)
+    */
+    $i = 0;
+    $artUrl = null;
+    foreach($albums as $album)
+    {
+        $artUrl[$i] = $album->{'image'}[$quality]->{'#text'};
+        $i++;
+    }
+
+    return $artUrl;
+}
+
+function getAlbums($url)
+{
+    $json = getJson($url);
+    return $json->{'topalbums'}->{'album'};
+}
+
+if(!isset($config))
+{
+	//if not defined, use Environment variables
+	$config['bucket'] = $_ENV["bucket"];
+	$config['api_key'] = $_ENV["api_key"];
+	$config['accessKey'] = $_ENV["accessKey"];
+	$config['secretKey'] = $_ENV["secretKey"];
+}
+
+
+$s3 = S3Client::factory(array(
+    'key' => $config['accessKey'],
+    'secret' => $config['secretKey'],
+    'region' => 'eu-west-1'));
+
+
 $url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; 
 $url = substr($url, strpos($url, '?')+1);
+
 //Parses the $vars and assigns the values as in the URL. $name and $period expected here.
 parse_str($url);
-$name = strtolower($name);
-$period = strtolower($period);
-$m = $width*$length;
-//Filepath to the Cached Images.
-$path = "i/php/$name$period$m.jpg";
-$noimage = "http://cdn.last.fm/flatness/catalogue/noimage/2/default_album_medium.png";
-//File Modified date
-$time = filemtime($path);
-//Checks if a file exists and is older than 2 hours. If so it outputs the image in the cache
+$request['user'] = $user;
+$request['period'] = $period;
+$request['width'] = $width;
+$request['length'] = $length;
+$limit = $request['width'] * $request['length'];
+$bucket = $config['bucket'];
+$key = "images/".$request['period']."/".$request['width']*$request['length']."/".$request['user'].".jpg";
 
-if(file_exists($path) && $time > time() - 18000 )
-{
-	header ("Content-type: image/jpeg");
- 	header("Cache-Control: must-revalidate");
-	$offset = 60 * 10;
- 	$ExpStr = "Expires: " . gmdate("D, d M Y H:i:s", time() + $offset) . " GMT";
- 	header($ExpStr);
-	readfile($path);	
-}
-/*else if(file_exists($path) && $time > time() - 604800 && $period != "7day")
-{
-	header("Content Type: image/jpeg");
-	header("Cache-Control: must-revalidate");
-	$offset = 60 * 10;
-	$ExpStr = "Expires: " . gmdate("D, d M Y H:i:s", time() + $offset) . " GMT";
-	header(ExpStr);
-	readfile($path);
-}*/
-else if($time < time() - 18000) //Or else it fetches a new image
-{
-	/*if($file_exists($path))
-	{
-		header("Content-type: image/jpeg");
-		header("Cache-Control: must-revalidate");
-		$offset = 60*10;
-		$ExpStr = "Expires: " . gmdate("D, d M Y H:i:s", time() + $offset) . " GMT";
-		header($ExpStr);
-		readfile($path);
-		$output = true;
-	}
-*/
-	include "../../proxy.php";
-	//Include a User Agent for the XML Query
-	header("User-Agent" . ": Last.fm/Album Collage");
-	$user_url = "http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=$name&period=$period&api_key=990bffa4bfec47d7e826740f266d3e75";
-	$ch = curl_init();
-	//Large Images are defined by this tag.
-	$needle = "<image size=\"large\">";
-	$endneedle = "</image>";
-	$rowcount = 0;
-	//Follows the X & Y axis
-	$loc = 0;
-	$loc2 = 0;
-	//Grabs the XML page via a proxy.
-	$last_xml = proxy_url($user_url);
-	$counter = 0;
-	//The Resized image at 300x300 pixels.
-	$resize = imagecreatetruecolor(100*$width, 100*$length);
-	$myImg = imagecreatetruecolor(126*$width, $length*126);
-	$bg = imagecolorallocate($myImg, 255, 255, 255);
-	imagefill($myImg, 0, 0, $bg);
-	imagefill($resize, 0, 0, $bg);
-	//3x3 Albums = 9 Images to be grabbed.
-	while($counter != $width*$length && $counter < 37 )
-	{
-		//Grabs the URL for the Images
-		$start = strpos($last_xml, $needle);
-		$last_xml = substr($last_xml, $start + 20 );
-		$end = strpos($last_xml, $endneedle);
-		$imgurl = substr($last_xml, 0, strpos($last_xml, $endneedle));
-	//Check is there's an actual image there, if not skip this turn, and get next album
-		if(strcmp($noimage, $imgurl) != 0)
-		{	
-			//Saves the images according to its file type.
-			if(strcmp (substr($imgurl, -3), "jpg" ) == 0)
-			{
-				save_image($imgurl, "topalbum.jpg");
-				$image = imagecreatefromjpeg("topalbum.jpg");
-			}
-			if(strcmp(substr($imgurl, -3), "png" ) == 0)
-			{
-				save_image($imgurl, "topalbum.png");
-				$image = imagecreatefrompng("topalbum.png");
-			}
-			//If the X axis reaches the end of the 3x3 grid, change Y by one increment of 126 and reset X
-			if ($loc == 126*$width)
-			{
-				$loc = 0;
-				$loc2 = $loc2 + 126;
-			}
-		
-			imagecopy($myImg, $image, $loc, $loc2, 0, 0, 126, 126);
-			//Gets rid of the Albums processed ready for the next Album.
-			$last_xml = substr($last_xml, strpos($last_xml, $endneedle));
-			$counter++;
-			//Increments X
-			$loc = $loc + 126;
-		}
-	}
-	header ("Content-type: image/jpeg");//Send type tobrowser
- 	header("Cache-Control: must-revalidate");//Set Cahce
-	$offset = 60 * 10;
- 	$ExpStr = "Expires: " . gmdate("D, d M Y H:i:s", time() + $offset) . " GMT";//Expire date
- 	header($ExpStr);
+$lastfmApi = "http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=".$request['user']."&period=".$request['period']."&api_key=".$config['api_key']."&limit=$limit&format=json";
 
-	//save the jpg resize to the path!
-	imagecopyresampled( $resize, $myImg, 0, 0, 0, 0, 100*$width, 100*$length, 126*$width, 126*$length);
-	imagejpeg($resize, $path, 100);
-	chmod($path, 0644); //Make it readable!
-	readfile($path);//Read the file and show to the request!
-	
-	//Cleam up tiem!
-	imagedestroy($myImg);
-	imagedestroy($image);
-	imagedestroy($resize);
-}
+$albums = getAlbums($lastfmApi);
+$covers = getArt($albums, 3);
+$image = createCollage($covers, 3, 0, $width, $length);
+$filepath = tempnam(null, null);
+
+header("Content-Type: image/jpeg");
+imagejpeg($image);
+imagejpeg($image, $filepath, 100);
+
+
+$result = $s3->putObject(array(
+    'Bucket' => $bucket,
+    'Key'   => $key,
+    'SourceFile' => $filepath,
+    'ACL'   => 'public-read',
+    'ContentType' => 'image/jpeg'
+    ));
+
+unlink($filepath);
+imagedestroy($image);
 ?>

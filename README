@@ -1,7 +1,21 @@
-PHP Script that takes in < last.fm username> and collages their most played albums in a grid
+A Script that takes in < last.fm username> and collages their most played albums in a grid
 Uses S3 to store the images in a persistant manner without filling up the local disk.
+
+Tested using PHP 5.5 and requires PHP-GD library for building the images
 
 Requires a config.inc.php file to include you AWS Access Keys in the form of:
 
 $config['accessKey'] = '<AWS Access Key>';
 $config['secretKey'] = '<SecretKey>';
+
+It also requires Last.fm keys:
+
+$config['api_key'] = '<LastFM Key>'
+
+
+If no config.inc.php file is found, it will use the following environment variables:
+
+accessKey,
+secretKey,
+api_key,
+bucket;
