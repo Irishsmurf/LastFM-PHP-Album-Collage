@@ -8,9 +8,8 @@
 	Version 0.6 = 17/9/2010
 	Version 0.7 = 10/6/2011
 	Version 0.9 = 02/8/2011
-	
-    Version 0.95 26/10/2014 - Upgraded to S3 & Rejigged code.
-	
+    Version 0.95 = 26/10/2014
+
 	0.5
 		Minor Bugfixes
 	
