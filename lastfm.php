@@ -22,6 +22,13 @@
 	0.9
 		Updated Webpage to include loading
 		Included Higher Definition Collages
+
+	0.95
+		Elastic Beanstalk Support
+		Amazon S3 Support
+		Total code refiguration to make a bit more sense
+
+
 */
 //Grabs the query included in the URL.
 
@@ -150,9 +157,6 @@ if(!defined($config))
 	$config['api_key'] = $_ENV["api_key"];
 	$config['accessKey'] = $_ENV["accessKey"];
 	$config['secretKey'] = $_ENV["secretKey"];
-	$config[''] = $_ENV[""];
-	$config[''] = $_ENV[""];
-
 }
 
 
@@ -162,15 +166,15 @@ $s3 = S3Client::factory(array(
     'region' => 'eu-west-1'));
 
 
-#$url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; 
-#$url = substr($url, strpos($url, '?')+1);
+$url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; 
+$url = substr($url, strpos($url, '?')+1);
 
 //Parses the $vars and assigns the values as in the URL. $name and $period expected here.
-#parse_str($url);
+parse_str($url);
 $width = 3;
 $length = 3;
-$request['user'] = 'irishsmurf';
-$request['period'] = 'overall';
+$request['user'] = $user;
+$request['period'] = $period;
 $request['width'] = $width;
 $request['length'] = $length;
 $limit = $request['width'] * $request['length'];
