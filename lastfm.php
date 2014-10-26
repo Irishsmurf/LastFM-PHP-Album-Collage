@@ -166,10 +166,10 @@ function getAlbums($url)
 if(!isset($config))
 {
 	//if not defined, use Environment variables
-	$config['bucket'] = $_ENV["bucket"];
-	$config['api_key'] = $_ENV["api_key"];
-	$config['accessKey'] = $_ENV["accessKey"];
-	$config['secretKey'] = $_ENV["secretKey"];
+	$config['bucket'] = getenv("bucket");
+	$config['api_key'] = getenv("api_key");
+	$config['accessKey'] = getenv("accessKey");
+	$config['secretKey'] = getenv("secretKey");
 }
 
 
