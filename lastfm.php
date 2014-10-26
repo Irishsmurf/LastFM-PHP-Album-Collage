@@ -171,8 +171,8 @@ $url = substr($url, strpos($url, '?')+1);
 
 //Parses the $vars and assigns the values as in the URL. $name and $period expected here.
 parse_str($url);
-$width = 3;
-$length = 3;
+//$width = 3;
+//$length = 3;
 $request['user'] = $user;
 $request['period'] = $period;
 $request['width'] = $width;
