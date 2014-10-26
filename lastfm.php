@@ -88,7 +88,7 @@ function getImages($coverUrls)
 	}
 
 	curl_multi_close($mh);
-	return $images
+	return $images;
 }
 
 function createCollage($covers, $quality ,$totalSize, $width, $length)
