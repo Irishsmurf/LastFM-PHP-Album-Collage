@@ -39,20 +39,6 @@ use Aws\S3\S3Client;
 use Aws\S3\Exception\S3Exception;
 
 
-function createImageFromFile($filename, $use_include_path = false, $context = null, &$info = null)
-{
-  $info = array("image"=>getimagesize($filename));
-  $info["image"] = getimagesize($filename);
-  if($info["image"] === false) throw new InvalidArgumentException("\"".$filename."\" is not readable or no php supported format");
-  else
-  {
-    $imageRes = imagecreatefromstring(file_get_contents($filename, $use_include_path, $context));
-    
-    if(isset($http_response_header)) $info["http"] = $http_response_header;
-    return $imageRes;
-  }
-}
-
 function getJson($url)
 {
     $curl = curl_init($url);
@@ -72,9 +58,37 @@ function getJson($url)
     return $decoded;
 }
 
-function downloadImage($url)
+function getImages($coverUrls)
 {
-    return createImageFromFile($url);
+	$chs = [];
+	$responses = [];
+	$running = null;
+
+	$i = 0;
+	foreach($coverUrls as $url)
+	{
+		$chs[$i] = curl_init();
+		curl_setopt($chs[$i], CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($chs[$i], CURLOPT_USERAGENT, 'www.paddez.com/lastfm/');
+
+		curl_multi_add_handle($mh, $chs[$i]);
+		$i++;
+	}
+	do
+	{
+		curl_multi_exec($mh, $running);
+		curl_multi_select($mh);
+	} while($running > 0);
+	
+	$i = 0;
+	foreach($chs as $ch)
+	{
+		$images[$i] = curl_multi_getcontent($ch);
+		curl_multi_remove_handle($mh, $ch);
+	}
+
+	curl_multi_close($mh);
+	return $images
 }
 
 function createCollage($covers, $quality ,$totalSize, $width, $length)
@@ -103,11 +117,10 @@ function createCollage($covers, $quality ,$totalSize, $width, $length)
     $coords['y'] = 0;
 
     $i = 1;
-    foreach($covers as $cover)
+	$images = getImages($covers);
+    foreach($images as $rawdata)
     {
-        if(strpos($cover, 'noimage'))
-            continue;
-        $image = downloadImage($cover);
+		$image = imagecreatefromstring($rawdata);
         imagecopy($canvas, $image, $coords['x'], $coords['y'], 0, 0, $pixels, $pixels);
         $coords['x'] += $pixels;
         
