@@ -63,7 +63,7 @@ function getImages($coverUrls)
 	$chs = [];
 	$responses = [];
 	$running = null;
-
+	$mh = curl_multi_init();
 	$i = 0;
 	foreach($coverUrls as $url)
 	{
