@@ -164,7 +164,7 @@ function getAlbums($url)
     return $json->{'topalbums'}->{'album'};
 }
 
-if(!defined($config['bucket']))
+if(!isset($config))
 {
 	//if not defined, use Environment variables
 	$config['bucket'] = $_ENV["bucket"];
