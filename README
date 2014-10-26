@@ -10,4 +10,12 @@ $config['secretKey'] = '<SecretKey>';
 
 It also requires Last.fm keys:
 
-$config['api_key'] = '<LastFM Key>';
+$config['api_key'] = '<LastFM Key>'
+
+
+If no config.inc.php file is found, it will use the following environment variables:
+
+accessKey,
+secretKey,
+api_key,
+bucket;
