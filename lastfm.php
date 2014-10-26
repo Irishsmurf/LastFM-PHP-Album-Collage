@@ -60,14 +60,14 @@ function getJson($url)
 
 function getImages($coverUrls)
 {
-	$chs = [];
-	$responses = [];
+	$chs = array();
+	$responses = array();
 	$running = null;
 	$mh = curl_multi_init();
 	$i = 0;
 	foreach($coverUrls as $url)
 	{
-		$chs[$i] = curl_init();
+		$chs[$i] = curl_init($url);
 		curl_setopt($chs[$i], CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($chs[$i], CURLOPT_USERAGENT, 'www.paddez.com/lastfm/');
 
@@ -85,6 +85,7 @@ function getImages($coverUrls)
 	{
 		$images[$i] = curl_multi_getcontent($ch);
 		curl_multi_remove_handle($mh, $ch);
+        $i++;
 	}
 
 	curl_multi_close($mh);
@@ -163,7 +164,7 @@ function getAlbums($url)
     return $json->{'topalbums'}->{'album'};
 }
 
-if(!defined($config))
+if(!defined($config['bucket']))
 {
 	//if not defined, use Environment variables
 	$config['bucket'] = $_ENV["bucket"];
@@ -184,10 +185,10 @@ $url = substr($url, strpos($url, '?')+1);
 
 //Parses the $vars and assigns the values as in the URL. $name and $period expected here.
 parse_str($url);
-//$width = 3;
-//$length = 3;
-$request['user'] = $user;
-$request['period'] = $period;
+$width = 3;
+$length = 3;
+$request['user'] = 'irishsmurf';
+$request['period'] = 'overall';
 $request['width'] = $width;
 $request['length'] = $length;
 $limit = $request['width'] * $request['length'];
