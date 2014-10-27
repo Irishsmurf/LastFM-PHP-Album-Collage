@@ -197,7 +197,7 @@ $lastfmApi = "http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=".
 $albums = getAlbums($lastfmApi);
 $covers = getArt($albums, 3);
 $image = createCollage($covers, 3, 0, $width, $length);
-$filepath = tempnam(null, null);
+$filepath = tempnam(sys_get_temp_dir(), null);
 
 header("Content-Type: image/jpeg");
 imagejpeg($image);
