@@ -156,7 +156,9 @@ function getArt($albums, $quality)
     		//LastFM doesn't have the image, use MBID to get it for coverartarchive.
     		$mb_api = 'http://coverartarchive.org/release/'.$album->{'mbid'};
    			$json = getJson($mb_api);
-   			$url = $json->{'images'}->{'thumbnails'}->{'large'}; 		
+   			$url = $json->{'images'}->{'thumbnails'}->{'large'};
+			error_log("MBID =".$album->{'mbid'};
+			error_log("Cover Art URL = ".$url);
        	}
         $artUrl[$i] = $url;
         $i++;
