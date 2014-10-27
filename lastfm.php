@@ -151,10 +151,11 @@ function getArt($albums, $quality)
     foreach($albums as $album)
     {
     	$url = $album->{'image'}[$quality]->{'#text'};
-    	if (strpos($url, 'noimage') != false) {
+    	if (strpos($url, 'noimage') != false) 
+		{
     		//LastFM doesn't have the image, use MBID to get it for coverartarchive.
     		$mb_api = 'http://coverartarchive.org/release/'.$album->{'mbid'};
-   			$json = getJson($mb_api)
+   			$json = getJson($mb_api);
    			$url = $json->{'images'}->{'thumbnails'}->{'large'}; 		
        	}
         $artUrl[$i] = $url;
