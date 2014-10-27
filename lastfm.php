@@ -158,7 +158,7 @@ function getArt($albums, $quality)
    			$json = getJson($mb_api);
    			$url = $json->{'images'}->{'thumbnails'}->{'large'};
 			error_log("Artist =".$album->{'artist'}->{'name'});
-			error_log("Artist MBID"=.$album->{'artist'}->{'mbid'});
+			error_log("Artist MBID".$album->{'artist'}->{'mbid'});
 			error_log("Album=".$album->{'name'});
 			error_log("MBID =".$album->{'mbid'});
 			error_log("Cover Art URL = ".$url);
