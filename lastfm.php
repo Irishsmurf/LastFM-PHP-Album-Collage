@@ -156,6 +156,7 @@ function getArt($albums, $quality)
     */
     $i = 0;
     $artUrl = null;
+	error_log(print_r($albums, true));
     foreach($albums as $album)
     {
     	$url = $album->{'image'}[$quality]->{'#text'};
