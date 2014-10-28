@@ -32,7 +32,7 @@
 //Grabs the query included in the URL.
 
 include('../config.inc.php');
-include('../vendor/autoloader.php');
+include('../vendor/autoload.php');
 
 use Aws\S3\S3Client;
 use Aws\S3\Exception\S3Exception;
