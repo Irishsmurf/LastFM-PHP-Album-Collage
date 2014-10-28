@@ -69,9 +69,7 @@ function getImages($coverUrls)
 		//Check if no image exists.
     	if (strpos($url['url'], 'noimage') != false) 
 		{
-			$artist = $url['artist'];
-			$album = $url['album'];
-			error_log('No album art for - '.$artist.' - '.$album);
+			error_log('No album art for - '.$url['artist'].' - '.$url['album']);
        	}
 		$chs[$i] = curl_init($url['url']);
 		curl_setopt($chs[$i], CURLOPT_RETURNTRANSFER, true);
@@ -155,7 +153,6 @@ function getArt($albums, $quality)
     */
     $i = 0;
     $artUrl = null;
-	error_log(print_r($albums[33], true));
     foreach($albums as $album)
     {
     	$url = $album->{'image'}[$quality]->{'#text'};
@@ -167,7 +164,6 @@ function getArt($albums, $quality)
         $i++;
     }
 
-	error_log(print_r($artUrl, true));
     return $artUrl;
 }
 
