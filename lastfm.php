@@ -214,8 +214,8 @@ $covers = getArt($albums, 3);
 $image = createCollage($covers, 3, 0, $width, $length);
 $filepath = tempnam(sys_get_temp_dir(), null);
 
-//header("Content-Type: image/jpeg");
-//imagejpeg($image);
+header("Content-Type: image/jpeg");
+imagejpeg($image);
 imagejpeg($image, $filepath, 100);
 
 
