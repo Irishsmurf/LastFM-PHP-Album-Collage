@@ -159,13 +159,11 @@ function getArt($albums, $quality)
     foreach($albums as $album)
     {
     	$url = $album->{'image'}[$quality]->{'#text'};
-		if(strpos($url, 'noimage') != false)
-		{
-			//There's no image, add artist and trackname variables.
-			$artUrl[$i]['artist'] = $album->{'artist'}->{'name'};
-			$artUrl[$i]['album'] = $album->{'name'};
-		}
+
+		$artUrl[$i]['artist'] = $album->{'artist'}->{'name'};
+		$artUrl[$i]['album'] = $album->{'name'};
 		$artUrl[$i]['url'] = $url;
+			
         $i++;
     }
 
