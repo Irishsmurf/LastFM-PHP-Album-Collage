@@ -190,7 +190,7 @@ $request['width'] = $width;
 $request['length'] = $length;
 $limit = $request['width'] * $request['length'];
 $bucket = $config['bucket'];
-$key = "images/".$request['period']."/".$request['width']*$request['length']."/".$request['user'].".jpg";
+$key = "images/".$request['user'].'-'.$request['period'];
 
 $lastfmApi = "http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=".$request['user']."&period=".$request['period']."&api_key=".$config['api_key']."&limit=$limit&format=json";
 
