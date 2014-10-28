@@ -9,6 +9,7 @@
 	Version 0.7 = 10/6/2011
 	Version 0.9 = 02/8/2011
     Version 1.0 = 26/10/2014
+	Version 1.1 = 28/10/2014
 
 	0.5
 		Minor Bugfixes
@@ -22,11 +23,13 @@
 		Updated Webpage to include loading
 		Included Higher Definition Collages
 
-	0.95
+	1.0
 		Elastic Beanstalk Support
 		Amazon S3 Support
 		Total code refiguration to make a bit more sense
-
+	
+	1.1
+		Implemented Composer for managing dependancies.
 
 */
 //Grabs the query included in the URL.
