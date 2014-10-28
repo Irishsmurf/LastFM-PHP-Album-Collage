@@ -66,7 +66,16 @@ function getImages($coverUrls)
 	$i = 0;
 	foreach($coverUrls as $url)
 	{
-		$chs[$i] = curl_init($url);
+		//Check if no image exists.
+    	if (strpos($url['url'], 'noimage') != false) 
+		{
+			$artist = $url['artist'];
+			$album = $url['album'];
+			echo $artist;
+			echo $album;
+       	}
+		
+		$chs[$i] = curl_init($url['url']);
 		curl_setopt($chs[$i], CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($chs[$i], CURLOPT_USERAGENT, 'www.paddez.com/lastfm/');
 
@@ -151,19 +160,13 @@ function getArt($albums, $quality)
     foreach($albums as $album)
     {
     	$url = $album->{'image'}[$quality]->{'#text'};
-    	if (strpos($url, 'noimage') != false) 
+		if(strpos($url, 'noimage') != false)
 		{
-    		//LastFM doesn't have the image, use MBID to get it for coverartarchive.
-    		$mb_api = 'http://coverartarchive.org/release/'.$album->{'mbid'};
-   			$json = getJson($mb_api);
-   			$url = $json->{'images'}->{'thumbnails'}->{'large'};
-			error_log("Artist =".$album->{'artist'}->{'name'});
-			error_log("Artist MBID".$album->{'artist'}->{'mbid'});
-			error_log("Album=".$album->{'name'});
-			error_log("MBID =".$album->{'mbid'});
-			error_log("Cover Art URL = ".$url);
-       	}
-        $artUrl[$i] = $url;
+			//There's no image, add artist and trackname variables.
+			$artUrl[$i]['artist'] = $album->{'artist'}->{'name'};
+			$artUrl[$i]['album'] = $album->{'name'};
+		}
+		$artUrl[$i]['url'] = $url;
         $i++;
     }
 
