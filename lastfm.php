@@ -169,6 +169,7 @@ function getArt($albums, $quality)
         $i++;
     }
 
+	error_log(print_r($artUrl, true));
     return $artUrl;
 }
 
