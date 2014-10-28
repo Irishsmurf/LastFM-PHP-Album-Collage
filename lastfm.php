@@ -73,7 +73,6 @@ function getImages($coverUrls)
 			$album = $url['album'];
 			error_log('No album art for - '.$artist.' - '.$album);
        	}
-		error_log($url['url']);
 		$chs[$i] = curl_init($url['url']);
 		curl_setopt($chs[$i], CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($chs[$i], CURLOPT_USERAGENT, 'www.paddez.com/lastfm/');
@@ -156,7 +155,7 @@ function getArt($albums, $quality)
     */
     $i = 0;
     $artUrl = null;
-	error_log(print_r($albums, true));
+	error_log(print_r($albums[33], true));
     foreach($albums as $album)
     {
     	$url = $album->{'image'}[$quality]->{'#text'};
