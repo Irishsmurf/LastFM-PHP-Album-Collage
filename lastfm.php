@@ -73,6 +73,7 @@ function getImages($coverUrls)
     	if (strpos($url['url'], 'noimage') != false) 
 		{
 			error_log('No album art for - '.$url['artist'].' - '.$url['album']);
+			continue;
        	}
 		$chs[$i] = curl_init($url['url']);
 		curl_setopt($chs[$i], CURLOPT_RETURNTRANSFER, true);
@@ -203,6 +204,13 @@ $request['width'] = $width;
 $request['length'] = $length;
 $limit = $request['width'] * $request['length'];
 $bucket = $config['bucket'];
+
+if(empty($config['bucket']) && empty($config['api_key']) && empty($config['accessKey']) && empty($config['secretKey']))
+{
+	error_log("Configuration not defined, check environment variables or config.inc.php");
+	die();
+}
+
 $key = 'images/'.$request['user'].'-'.$request['period'].'.jpg';
 
 $lastfmApi = "http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=".$request['user']."&period=".$request['period']."&api_key=".$config['api_key']."&limit=$limit&format=json";

@@ -1,48 +1,12 @@
 <?php
 
 include_once('config.inc.php');
-$file = "refers.txt";
-$genTimes = "genTime.txt";
-$log_ip = 1;
 $url = parse_url($_SERVER['HTTP_REFERER']);
-$referer = (!isset($_SERVER['HTTP_REFERER']) || $_SERVER['HTTP_REFERER'] == '') ? 'an unknown url/direct access (typing in URL)' : $_SERVER['HTTP_REFERER'];
-$ip = ($log_ip == 1) ? $_SERVER['REMOTE_ADDR'] : false;
-$time = gmdate("Y-m-d\T H:i:s\Z");
-$user_text  = ($log_ip == 1) ? "On {$time} {$ip}" : "On {$time} a user";
-$refer_text = "{$referer}";
-$fw = fopen("hits.txt", 'a');
-fwrite($fw, $user_text."\n");
-fclose($fw);
-
-if ($url['host'] !== $_SERVER['HTTP_HOST'] && $referer != 'an unknown url/direct access (typing in URL)')
-{
-
-	$fp = fopen($file, 'a');
-	fwrite($fp, $user_text." hit from referrer: "."{$refer_text} \n");
-	fclose($fp);
-
-}
-
 ?>
 <!doctype html>
 <html lang="en">
 
 <head>
-<meta name="twitter:card" content="photo">
-<meta name="twitter:site" content="irishsmurf">
-	<meta name="twitter:creator" content="">
-	<meta name="twitter:title" content="">
-	<meta name="twitter:image:src" content="">
-	<meta name="twitter:domain" content="">
-	<meta name="twitter:app:name:iphone" content="">
-	<meta name="twitter:app:name:ipad" content="">
-	<meta name="twitter:app:name:googleplay" content="">
-	<meta name="twitter:app:url:iphone" content="">
-	<meta name="twitter:app:url:ipad" content="">
-	<meta name="twitter:app:url:googleplay" content="">
-	<meta name="twitter:app:id:iphone" content="">
-	<meta name="twitter:app:id:ipad" content="">
-	<meta name="twitter:app:id:googleplay" content="">
 	<title>Paddez</title>
    	<link rel="stylesheet" href="https://www.paddez.com/style.css" type="text/css" media="screen" />
     <link rel="SHORTCUT ICON" href="https://www.paddez.com/images/faviocon.ico">
