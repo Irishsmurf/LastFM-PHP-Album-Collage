@@ -59,6 +59,12 @@ $url = parse_url($_SERVER['HTTP_REFERER']);
 <h2>Last.fm Album Collage Generator</h2>
 </header><center>
 <p>
+<?php 
+	if(isset($_POST) || !empty($_POST))
+	{
+		echo "<img href=\"http://lastfm.paddez.com/lastfm.php?user=$name&period=$period&cols=$width&rows=$len\"></img>";
+	}
+?>
 </p>
 </section>
 <section>
@@ -66,7 +72,7 @@ $url = parse_url($_SERVER['HTTP_REFERER']);
 <center>
 <table cellpadding="0" cellspacing="0">
 <tr>
-<form action="<?php echo $PHP_SELF;?>" method=post>
+<form action="" method=post>
 <td class="label"> Username: </td>
 <td>
 <input type="text" size="40" name="name" placeholder="Username" <?php if(strlen($name) > 1) echo " value=\"$name\"";  ?>></td>
@@ -102,18 +108,11 @@ $url = parse_url($_SERVER['HTTP_REFERER']);
 <option value="12month">Last 12 Months</option>
 </select>
 </td>
-<tr>	
-<td>Hi-res</td>
-<td>
-<input type="checkbox" name="hiDef" value="true" />
-</td>
-</tr>
 </table>
 <br />
 <input type=submit value="Submit" name="submit" onClick="changeImage();">
 
 </form>
-<?php if(!$bigImage) echo "<p>$bbcode</p>" ?></center>
 </article>
 </section>
 </div>
