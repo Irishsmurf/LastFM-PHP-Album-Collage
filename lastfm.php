@@ -100,7 +100,7 @@ function getImages($coverUrls)
 	return $images;
 }
 
-function createCollage($covers, $quality ,$totalSize, $width, $length)
+function createCollage($covers, $quality ,$totalSize, $cols, $rows)
 {
     switch ($quality)
     {
@@ -118,7 +118,7 @@ function createCollage($covers, $quality ,$totalSize, $width, $length)
             break;
     }
 
-    $canvas = imagecreatetruecolor($pixels * $width, $pixels * $length);
+    $canvas = imagecreatetruecolor($pixels * $cols, $pixels * $rows);
     $backgroundColor = imagecolorallocate($canvas, 255, 255, 255);
     imagefill($canvas, 0, 0, $backgroundColor);
     
@@ -133,7 +133,7 @@ function createCollage($covers, $quality ,$totalSize, $width, $length)
         imagecopy($canvas, $image, $coords['x'], $coords['y'], 0, 0, $pixels, $pixels);
         $coords['x'] += $pixels;
         
-        if($i % $width == 0)
+        if($i % $cols == 0)
         {
             $coords['y'] += 300;
             $coords['x'] = 0;
@@ -200,9 +200,9 @@ $url = substr($url, strpos($url, '?')+1);
 parse_str($url);
 $request['user'] = $user;
 $request['period'] = $period;
-$request['width'] = $width;
-$request['length'] = $length;
-$limit = $request['width'] * $request['length'];
+$request['cols'] = $cols;
+$request['rows'] = $rows;
+$limit = $request['cols'] * $request['rows'];
 $bucket = $config['bucket'];
 
 if(empty($config['bucket']) && empty($config['api_key']) && empty($config['accessKey']) && empty($config['secretKey']))
@@ -217,7 +217,7 @@ $lastfmApi = "http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=".
 
 $albums = getAlbums($lastfmApi);
 $covers = getArt($albums, 3);
-$image = createCollage($covers, 3, 0, $width, $length);
+$image = createCollage($covers, 3, 0, $cols, $rows);
 $filepath = tempnam(sys_get_temp_dir(), null);
 
 header("Content-Type: image/jpeg");
@@ -232,6 +232,7 @@ $result = $s3->putObject(array(
     'ACL'   => 'public-read',
     'ContentType' => 'image/jpeg'
     ));
+
 
 unlink($filepath);
 imagedestroy($image);
