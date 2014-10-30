@@ -58,14 +58,14 @@ $url = parse_url($_SERVER['HTTP_REFERER']);
 <center>
 <h2>Last.fm Album Collage Generator</h2>
 </header><center>
-<p>
+
 <?php 
 	if(isset($_POST) || !empty($_POST))
 	{
-		echo "<img href=\"http://lastfm.paddez.com/lastfm.php?user=$name&period=$period&cols=$width&rows=$len\"></img>";
+		echo "<img src=\"http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']."lastfm.php?user=".$_POST['name']."&period=".$_POST['period']."&cols=".$_POST['width']."&rows=".$_POST['len']."\"></img>\n";
 	}
 ?>
-</p>
+
 </section>
 <section>
 <article class="main">
