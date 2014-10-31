@@ -56,8 +56,7 @@ function getJson($url)
     }
 
     curl_close($curl);
-    $decoded = json_decode($response);
-    return $decoded;
+    return ($response);
 }
 
 function getImages($coverUrls)
@@ -171,9 +170,8 @@ function getArt($albums, $quality)
     return $artUrl;
 }
 
-function getAlbums($url)
+function getAlbums($json)
 {
-    $json = getJson($url);
     return $json->{'topalbums'}->{'album'};
 }
 
@@ -217,25 +215,35 @@ $key = 'images/'.$request['user'].'-'.$request['period'].'.jpg';
 
 $lastfmApi = "http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=".$request['user']."&period=".$request['period']."&api_key=".$config['api_key']."&limit=$limit&format=json";
 
-$albums = getAlbums($lastfmApi);
+$json = getJson($lastfmApi);
+$jsonhash = md5($json);
+
+$filename = "images/$user.$period.$rows.$cols.$jsonhash";
+
+if(file_exists($filename)) 
+{
+	header("Content-Type: image/jpeg");
+	error_log("Serving from cache - ".$filename);
+	echo file_get_contents($filename);
+	exit;
+}
+
+$albums = getAlbums(json_decode($json));
 $covers = getArt($albums, 3);
 $image = createCollage($covers, 3, 0, $cols, $rows);
-$filepath = tempnam(sys_get_temp_dir(), null);
 
 header("Content-Type: image/jpeg");
 imagejpeg($image);
-imagejpeg($image, $filepath, 100);
+imagejpeg($image, $filename);
 
 
 $result = $s3->putObject(array(
     'Bucket' => $bucket,
     'Key'   => $key,
-    'SourceFile' => $filepath,
+    'SourceFile' => $filename,
     'ACL'   => 'public-read',
     'ContentType' => 'image/jpeg'
     ));
 
-
-unlink($filepath);
 imagedestroy($image);
 ?>
