@@ -234,13 +234,13 @@ $image = createCollage($covers, 3, 0, $cols, $rows);
 
 header("Content-Type: image/jpeg");
 imagejpeg($image);
-imagejpeg($image, $filename, 100);
+imagejpeg($image, $filename);
 
 
 $result = $s3->putObject(array(
     'Bucket' => $bucket,
     'Key'   => $key,
-    'SourceFile' => $name,
+    'SourceFile' => $filename,
     'ACL'   => 'public-read',
     'ContentType' => 'image/jpeg'
     ));
