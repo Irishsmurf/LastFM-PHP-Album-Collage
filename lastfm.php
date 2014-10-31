@@ -224,6 +224,7 @@ $filename = "images/$user.$period.$rows.$cols.$jsonhash";
 if(file_exists($filename)) 
 {
 	header("Content-Type: image/jpeg");
+	error_log("Serving from cache - ".$filename);
 	echo file_get_contents($filename);
 	exit;
 }
