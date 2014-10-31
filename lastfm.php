@@ -56,8 +56,7 @@ function getJson($url)
     }
 
     curl_close($curl);
-    $decoded = json_decode($response);
-    return $decoded;
+    return ($response);
 }
 
 function getImages($coverUrls)
@@ -229,7 +228,7 @@ if(file_exists($filename))
 	exit;
 }
 
-$albums = getAlbums($json);
+$albums = getAlbums(json_decode($json));
 $covers = getArt($albums, 3);
 $image = createCollage($covers, 3, 0, $cols, $rows);
 
@@ -241,11 +240,10 @@ imagejpeg($image, $filename, 100);
 $result = $s3->putObject(array(
     'Bucket' => $bucket,
     'Key'   => $key,
-    'SourceFile' => $filepath,
+    'SourceFile' => $name,
     'ACL'   => 'public-read',
     'ContentType' => 'image/jpeg'
     ));
 
-unlink($filepath);
 imagedestroy($image);
 ?>
