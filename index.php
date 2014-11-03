@@ -64,12 +64,12 @@ $url = parse_url($_SERVER['HTTP_REFERER']);
 		echo "<img src=\"http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']."lastfm.php?user=".$_POST['name']."&period=".$_POST['period']."&cols=".$_POST['width']."&rows=".$_POST['len']."\"></img>\n";
 	}
 	else {
-		echo "<img src=\"http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']."/resources/notload.gif></img>\n";
+		echo "<img src=\"http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']."resources/notload.gif\"></img>\n";
 	}
 
 	if(!empty($_POST)){
 		$link = 'http://cdn.paddez.com/images/'.$_POST['name'].'-'.$_POST['period'].'.jpg';
-		echo "<p>Static Link: $link </p>";
+		echo "<p>Static Link: <a href=\"$link\">$link</a> </p>";
 	}
 ?>
 
