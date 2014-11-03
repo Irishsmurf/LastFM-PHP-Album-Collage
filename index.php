@@ -60,11 +60,16 @@ $url = parse_url($_SERVER['HTTP_REFERER']);
 </header><center>
 
 <?php 
-	if(isset($_POST) || !empty($_POST)){
+	if(isset($_POST['name']) && isset($_POST['period']) && isset($_POST['width']) || !empty($_POST)){
 		echo "<img src=\"http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']."lastfm.php?user=".$_POST['name']."&period=".$_POST['period']."&cols=".$_POST['width']."&rows=".$_POST['len']."\"></img>\n";
 	}
 	else {
 		echo "<img src=\"http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']."/resources/notload.gif></img>\n";
+	}
+
+	if(!empty($_POST)){
+		$link = 'http://cdn.paddez.com/images/'.$_POST['name'].'-'.$_POST['period'].'.jpg';
+		echo "<p>Static Link: $link </p>";
 	}
 ?>
 
