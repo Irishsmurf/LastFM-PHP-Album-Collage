@@ -88,19 +88,22 @@ $url = parse_url($_SERVER['HTTP_REFERER']);
 <td>
 <select name="len">
 <option value="3" selected>3</option>
-<option value="4">4</option>
-<option value="5">5</option>
-<option value="6">6</option>
-
+<?php
+for($x=4; $x<=10; $x++){
+	echo "<option value=\"$x\">$x</option>\n";
+}
+?>
 </select>
 </tr>
 <td class="label"> Columns: </td>
 <td>
 <select name="width">
 <option value="3" selected>3</option>
-<option value="4">4</option>
-<option value="5">5</option>
-<option value="6">6</option>
+<?php
+for($x=4; $x<=10; $x++){
+	echo "<option value=\"$x\">$x</option>\n";
+}
+?>
 
 </select>
 </td>
