@@ -239,7 +239,7 @@ imagejpeg($image, $filename);
 
 $result = $s3->putObject(array(
     'Bucket' => $bucket,
-    'Key'   => $key,
+    'Key'   => strtolower($key),
     'SourceFile' => $filename,
     'ACL'   => 'public-read',
     'ContentType' => 'image/jpeg'
