@@ -68,7 +68,7 @@ $url = parse_url($_SERVER['HTTP_REFERER']);
 	}
 
 	if(!empty($_POST)){
-		$link = 'http://content.paddez.com/images/'.$_POST['name'].'-'.$_POST['period'].'.jpg';
+		$link = 'http://content.paddez.com/images/'.strtolower($_POST['name']).'-'.$_POST['period'].'.jpg';
 		echo "<p>Static Link: <a href=\"$link\">$link</a> </p>";
 	}
 ?>
