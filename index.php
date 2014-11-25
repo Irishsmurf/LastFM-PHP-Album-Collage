@@ -8,8 +8,8 @@ $url = parse_url($_SERVER['HTTP_REFERER']);
 
 <head>
 	<title>Paddez</title>
-   	<link rel="stylesheet" href="https://www.paddez.com/style.css" type="text/css" media="screen" />
-    <link rel="SHORTCUT ICON" href="https://www.paddez.com/images/faviocon.ico">
+   	<link rel="stylesheet" href="https://static.paddez.com/style.css" type="text/css" media="screen" />
+    <link rel="SHORTCUT ICON" href="https://static.paddez.com/images/faviocon.ico">
 	<script>
 	if(document.images)
 	{
