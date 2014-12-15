@@ -113,6 +113,7 @@ for($x=4; $x<=10; $x++){
 <select name="period">
 <option value="overall">Overall</option>
 <option value="7day" selected>Last 7 Days</option>
+<option value="1month">Last Month</option>
 <option value="3month">Last 3 Months</option>
 <option value="6month">Last 6 Months</option>
 <option value="12month">Last 12 Months</option>
