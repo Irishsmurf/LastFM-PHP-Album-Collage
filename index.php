@@ -14,13 +14,13 @@ $url = parse_url($_SERVER['HTTP_REFERER']);
 	if(document.images)
 	{
 		var load = new Image();
-		load.src = "http://www.redbrick.dcu.ie/~paddez/projects/lastfm/i/load.gif";
+		load.src = "https://static.paddez.com/images/load.gif";
 	}
 	function changeImage()
 	{
 		if(document.images)
 		{				
-			document.place.src = "http://www.redbrick.dcu.ie/~paddez/projects/lastfm/i/load.gif";
+			document.place.src = "https://static.paddez.com/images/load.gif";
 		}
 		
 	}
@@ -64,7 +64,7 @@ $url = parse_url($_SERVER['HTTP_REFERER']);
 		echo "<img src=\"http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']."lastfm.php?user=".$_POST['name']."&period=".$_POST['period']."&cols=".$_POST['width']."&rows=".$_POST['len']."\"></img>\n";
 	}
 	else {
-		echo "<img src=\"http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']."resources/notload.gif\"></img>\n";
+		echo "<img src=\"https://static.paddez.com/images/notload.gif\"></img>\n";
 	}
 
 	if(!empty($_POST)){
