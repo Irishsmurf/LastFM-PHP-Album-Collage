@@ -7,6 +7,7 @@ $url = parse_url($_SERVER['HTTP_REFERER']);
 <html lang="en">
 
 <head>
+<meta name="google-site-verification" content="-KVdJ1exOkKJOnzSebdMNGStyc68M8s7p09zpb-Lfk0" />
 	<title>Paddez</title>
    	<link rel="stylesheet" href="https://static.paddez.com/style.css" type="text/css" media="screen" />
     <link rel="SHORTCUT ICON" href="https://static.paddez.com/images/faviocon.ico">
@@ -127,17 +128,6 @@ for($x=4; $x<=10; $x++){
 </article>
 </section>
 </div>
-<!--<aside>
-<center>
-Follow Me At
-<br />
-<a href="http://www.twitter.com/Irishsmurf" class="rollover1" title="Twitter"  target="_BLANK"><span class="displace">Twitter</span></a>
-<a href="http://www.facebook.com/theIrishsmurf" class="rollover2" title="Facebook" target="_BLANK"><span class="displace">Facebook</span></a>
-<a href="http://www.last.fm/user/Irishsmurf" class="rollover3" title="Last.fm" target="_BLANK"><span class="displace">Last.fm</span></a>      
-<a href="http://www.reddit.com/user/Irishsmurf" target="_BLANK" ><img src="../../images/reddit2.png" alt="Reddit" width="36" height="38" border="0"></a>
-
-</center>
-</aside>-->
 </div>
 <br />
 <br />
