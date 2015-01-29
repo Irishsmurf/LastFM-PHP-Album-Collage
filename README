@@ -3,10 +3,7 @@ Uses S3 to store the images in a persistant manner without filling up the local 
 
 Tested using PHP 5.5 and requires PHP-GD library for building the images
 
-Requires a config.inc.php file to include you AWS Access Keys in the form of:
-
-$config['accessKey'] = '<AWS Access Key>';
-$config['secretKey'] = '<SecretKey>';
+Requires AWS IAM Roles running on your instance.
 
 It also requires Last.fm keys:
 

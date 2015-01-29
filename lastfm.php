@@ -186,9 +186,8 @@ if(!isset($config))
 
 
 $s3 = S3Client::factory(array(
-    'key' => $config['accessKey'],
-    'secret' => $config['secretKey'],
-    'region' => 'eu-west-1'));
+    'default_cache_config' => '/tmp/secure-dir',
+	'region' => 'eu-west-1'));
 
 
 $url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; 
