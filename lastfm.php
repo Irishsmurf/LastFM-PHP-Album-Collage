@@ -39,7 +39,8 @@ include('vendor/autoload.php');
 
 use Aws\S3\S3Client;
 use Aws\S3\Exception\S3Exception;
-
+use Doctrine\Common\Cache\FilesystemCache;
+use Guzzle\Cache\DoctrineCacheAdapter;
 
 function getJson($url)
 {
@@ -184,9 +185,9 @@ if(!isset($config))
 	$config['secretKey'] = getenv("secretKey");
 }
 
-
+$cache = new DoctrineCacheAdapter(new FilesystemCache('/tmp/cache'));
 $s3 = S3Client::factory(array(
-    'default_cache_config' => '/tmp/secure-dir',
+    'credentials.cache' => $cache,
 	'region' => 'eu-west-1'));
 
 
@@ -234,7 +235,6 @@ $image = createCollage($covers, 3, 0, $cols, $rows);
 header("Content-Type: image/jpeg");
 imagejpeg($image);
 imagejpeg($image, $filename);
-
 
 $result = $s3->putObject(array(
     'Bucket' => $bucket,
