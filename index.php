@@ -1,7 +1,12 @@
 <?php
 
 include_once('config.inc.php');
-$url = parse_url($_SERVER['HTTP_REFERER']);
+
+$name = "Username";
+if(isset($_SERVER['HTTP_REFERER']){
+	$url = parse_url($_SERVER['HTTP_REFERER']);
+}
+
 ?>
 <!doctype html>
 <html lang="en">
