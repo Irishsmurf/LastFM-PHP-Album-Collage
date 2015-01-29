@@ -3,7 +3,7 @@
 include_once('config.inc.php');
 
 $name = "Username";
-if(isset($_SERVER['HTTP_REFERER']){
+if(isset($_SERVER['HTTP_REFERER'])){
 	$url = parse_url($_SERVER['HTTP_REFERER']);
 }
 
