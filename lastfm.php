@@ -179,7 +179,7 @@ function getAlbums($json)
 function errorImage($message)
 {
 	$x = 500;
-	$y = 100;
+	$y = 50;
 	$font = "resources/OpenSans-Regular.ttf";
 
 	$image = imagecreatetruecolor($x, $y);
