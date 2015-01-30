@@ -39,6 +39,7 @@ include('vendor/autoload.php');
 
 use Aws\S3\S3Client;
 use Aws\S3\Exception\S3Exception;
+use Aws\Sns\SnsClient;
 use Doctrine\Common\Cache\FilesystemCache;
 use Guzzle\Cache\DoctrineCacheAdapter;
 
@@ -236,8 +237,17 @@ $infoJson = json_decode(getJson($validUser));
 if(isset($infoJson->{"error"}))
 {
 	header("Content-Type: image/png");
-	error_log($infoJson->{"error"}." - ".$request['user']);
+	error_log($infoJson->{"message"}." - ".$request['user']);
 	imagepng(errorImage($infoJson->{"message"}));
+	$sns = SnsClient::factory(array(
+		'credentials.cache' => $cache,
+		'region' => 'eu-west-1'));
+	$sns->publish(array(
+		'TopicArn' => 'arn:aws:sns:eu-west-1:346795263809:LastFM-Errors',
+		'Message' => $infoJson->{"message"}." - ".$request['user'],
+		'Subject' => "Lastfm Error: ".$infoJson->{"error"}
+		));
+
 	return;
 }
 
