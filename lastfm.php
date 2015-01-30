@@ -184,8 +184,8 @@ function errorImage($message)
 	$font = "resources/OpenSans-Regular.ttf";
 
 	$image = imagecreatetruecolor($x, $y);
-	$background = $imagecolorallocate($image, 0xF0, 0xF0, 0xF0);
-	$foreground = $imagecolorallocate($image, 0x00, 0x00, 0x00);
+	$background = imagecolorallocate($image, 0xF0, 0xF0, 0xF0);
+	$foreground = imagecolorallocate($image, 0x00, 0x00, 0x00);
 	imagettftext($image, 20, 0, 10, 20, $foreground, $message);
 
 	return $image;
@@ -237,7 +237,7 @@ $infoJson = json_decode(getJson($validUser));
 if(isset($infoJson->{"error"}))
 {
 	header("Content-Type: image/png");
-	error_log("No user - ".$result['user']);
+	error_log("No user - ".$request['user']);
 
 	imagepng(errorImage($infoJson->{"message"}));
 	imagedestroy($image);
