@@ -205,7 +205,7 @@ $request['rows'] = $rows;
 $limit = $request['cols'] * $request['rows'] + 5;
 $bucket = $config['bucket'];
 
-if(empty($config['bucket']) && empty($config['api_key'])))
+if(empty($config['bucket']) && empty($config['api_key']))
 {
 	error_log("Configuration not defined, check environment variables or config.inc.php");
 	die();
