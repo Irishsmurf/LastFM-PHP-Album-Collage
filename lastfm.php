@@ -178,15 +178,15 @@ function getAlbums($json)
 
 function errorImage($message)
 {
-	$x = 300;
-	$y = 300;
+	$x = 500;
+	$y = 100;
 	$font = "resources/OpenSans-Regular.ttf";
 
 	$image = imagecreatetruecolor($x, $y);
 	$background = imagecolorallocate($image, 0xF0, 0xF0, 0xF0);
 	$foreground = imagecolorallocate($image, 0x00, 0x00, 0x00);
 	imagefill($image, 0, 0, $background);
-	imagettftext($image, 20, 0, 10, 20, $foreground, $font ,$message);
+	imagettftext($image, 20, 0, 45, 20, $foreground, $font ,$message);
 
 	return $image;
 }
