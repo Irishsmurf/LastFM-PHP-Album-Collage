@@ -185,8 +185,8 @@ function errorImage($message)
 	$image = imagecreatetruecolor($x, $y);
 	$background = imagecolorallocate($image, 0xF0, 0xF0, 0xF0);
 	$foreground = imagecolorallocate($image, 0x00, 0x00, 0x00);
-	imagefill($image, $x, $y, $background);
-	imagettftext($image, 20, 0, 10, 20, $foreground, $message);
+	imagefill($image, $x, $y, $foreground);
+	imagettftext($image, 20, 0, 10, 20, $background, $font ,$message);
 
 	return $image;
 }
