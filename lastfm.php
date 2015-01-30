@@ -234,10 +234,11 @@ $validUser = "http://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=".$requ
 
 
 $infoJson = json_decode(getJson($validUser));
+
 if(isset($infoJson->{"error"}))
 {
 	header("Content-Type: image/png");
-	error_log("No user - ".$request['user']);
+	error_log($request['message']." - ".$request['user']);
 	imagepng(errorImage($infoJson->{"message"}));
 	return;
 }
