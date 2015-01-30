@@ -196,8 +196,6 @@ if(!isset($config))
 	//if not defined, use Environment variables
 	$config['bucket'] = getenv("bucket");
 	$config['api_key'] = getenv("api_key");
-	$config['accessKey'] = getenv("accessKey");
-	$config['secretKey'] = getenv("secretKey");
 }
 
 $cache = new DoctrineCacheAdapter(new FilesystemCache('/tmp/cache'));
@@ -238,7 +236,7 @@ $infoJson = json_decode(getJson($validUser));
 if(isset($infoJson->{"error"}))
 {
 	header("Content-Type: image/png");
-	error_log($request['message']." - ".$request['user']);
+	error_log($infoJson->{"error"}." - ".$request['user']);
 	imagepng(errorImage($infoJson->{"message"}));
 	return;
 }
