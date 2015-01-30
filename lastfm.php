@@ -185,8 +185,8 @@ function errorImage($message)
 	$image = imagecreatetruecolor($x, $y);
 	$background = imagecolorallocate($image, 0xF0, 0xF0, 0xF0);
 	$foreground = imagecolorallocate($image, 0x00, 0x00, 0x00);
-	imagefill($image, $x, $y, $foreground);
-	imagettftext($image, 20, 0, 10, 20, $background, $font ,$message);
+	imagefill($image, 0, 0, $background);
+	imagettftext($image, 20, 0, 10, 20, $foreground, $font ,$message);
 
 	return $image;
 }
@@ -238,7 +238,6 @@ if(isset($infoJson->{"error"}))
 {
 	header("Content-Type: image/png");
 	error_log("No user - ".$request['user']);
-
 	imagepng(errorImage($infoJson->{"message"}));
 	return;
 }
