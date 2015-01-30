@@ -2,7 +2,8 @@
 	"require": {
 		"ext-gd": "*",
 		"aws/aws-sdk-php": "2.*",
-		"monolog/monolog": "~1.1"
+		"monolog/monolog": "~1.1",
+		"doctrine/orm": "*"
 	},
 	"require-dev": {
 		"heroku/heroku-buildpack-php":"*"

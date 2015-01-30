@@ -39,7 +39,9 @@ include('vendor/autoload.php');
 
 use Aws\S3\S3Client;
 use Aws\S3\Exception\S3Exception;
-
+use Aws\Sns\SnsClient;
+use Doctrine\Common\Cache\FilesystemCache;
+use Guzzle\Cache\DoctrineCacheAdapter;
 
 function getJson($url)
 {
@@ -175,20 +177,32 @@ function getAlbums($json)
     return $json->{'topalbums'}->{'album'};
 }
 
+function errorImage($message)
+{
+	$x = 500;
+	$y = 50;
+	$font = "resources/OpenSans-Regular.ttf";
+
+	$image = imagecreatetruecolor($x, $y);
+	$background = imagecolorallocate($image, 0xF0, 0xF0, 0xF0);
+	$foreground = imagecolorallocate($image, 0x00, 0x00, 0x00);
+	imagefill($image, 0, 0, $background);
+	imagettftext($image, 20, 0, 45, 20, $foreground, $font ,$message);
+
+	return $image;
+}
+
 if(!isset($config))
 {
 	//if not defined, use Environment variables
 	$config['bucket'] = getenv("bucket");
 	$config['api_key'] = getenv("api_key");
-	$config['accessKey'] = getenv("accessKey");
-	$config['secretKey'] = getenv("secretKey");
 }
 
-
+$cache = new DoctrineCacheAdapter(new FilesystemCache('/tmp/cache'));
 $s3 = S3Client::factory(array(
-    'key' => $config['accessKey'],
-    'secret' => $config['secretKey'],
-    'region' => 'eu-west-1'));
+    'credentials.cache' => $cache,
+	'region' => 'eu-west-1'));
 
 
 $url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; 
@@ -205,7 +219,7 @@ $request['rows'] = $rows;
 $limit = $request['cols'] * $request['rows'] + 5;
 $bucket = $config['bucket'];
 
-if(empty($config['bucket']) && empty($config['api_key']) && empty($config['accessKey']) && empty($config['secretKey']))
+if(empty($config['bucket']) && empty($config['api_key']))
 {
 	error_log("Configuration not defined, check environment variables or config.inc.php");
 	die();
@@ -214,6 +228,29 @@ if(empty($config['bucket']) && empty($config['api_key']) && empty($config['acces
 $key = 'images/'.$request['user'].'-'.$request['period'].'.jpg';
 
 $lastfmApi = "http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=".$request['user']."&period=".$request['period']."&api_key=".$config['api_key']."&limit=$limit&format=json";
+
+$validUser = "http://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=".$request['user']."&api_key=990bffa4bfec47d7e826740f266d3e75&format=json";
+
+
+$infoJson = json_decode(getJson($validUser));
+
+if(isset($infoJson->{"error"}))
+{
+	header("Content-Type: image/png");
+	error_log($infoJson->{"message"}." - ".$request['user']);
+	imagepng(errorImage($infoJson->{"message"}));
+	$sns = SnsClient::factory(array(
+		'credentials.cache' => $cache,
+		'region' => 'eu-west-1'));
+	$sns->publish(array(
+		'TopicArn' => 'arn:aws:sns:eu-west-1:346795263809:LastFM-Errors',
+		'Message' => $infoJson->{"message"}." - ".$request['user'],
+		'Subject' => "Lastfm Error: ".$infoJson->{"error"}
+		));
+
+	return;
+}
+
 
 $json = getJson($lastfmApi);
 $jsonhash = md5($json);
@@ -235,7 +272,6 @@ $image = createCollage($covers, 3, 0, $cols, $rows);
 header("Content-Type: image/jpeg");
 imagejpeg($image);
 imagejpeg($image, $filename);
-
 
 $result = $s3->putObject(array(
     'Bucket' => $bucket,
