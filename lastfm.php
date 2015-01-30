@@ -176,6 +176,21 @@ function getAlbums($json)
     return $json->{'topalbums'}->{'album'};
 }
 
+function errorImage($message)
+{
+	$x = 300;
+	$y = 300;
+	'#f0f0f0';
+	$font = "resources/OpenSans-Regular.ttf";
+
+	$image = imagecreatetruecolor($x, $y);
+	$background = $imagecolorallocate($image, 0xF0, 0xF0, 0xF0);
+	$foreground = $imagecolorallocate($image, 0x00, 0x00, 0x00);
+	imagettftext($image, 20, 0, 10, 20, $foreground, $message);
+
+	return $image;
+}
+
 if(!isset($config))
 {
 	//if not defined, use Environment variables
@@ -214,6 +229,21 @@ if(empty($config['bucket']) && empty($config['api_key']))
 $key = 'images/'.$request['user'].'-'.$request['period'].'.jpg';
 
 $lastfmApi = "http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=".$request['user']."&period=".$request['period']."&api_key=".$config['api_key']."&limit=$limit&format=json";
+
+$validUser = "http://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=".$request['user']."&api_key=990bffa4bfec47d7e826740f266d3e75&format=json";
+
+
+$infoJson = json_decode(getJson($validUser));
+if(isset($infoJson->{"error"}))
+{
+	header("Content-Type: image/png");
+	error_log("No user - ".$result['user']);
+
+	imagepng(errorImage($infoJson->{"message"}));
+	imagedestroy($image);
+	return;
+}
+
 
 $json = getJson($lastfmApi);
 $jsonhash = md5($json);
