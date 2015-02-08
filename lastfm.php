@@ -236,7 +236,7 @@ $request['user'] = $user;
 $request['period'] = $period;
 $request['cols'] = $cols;
 $request['rows'] = $rows;
-$albumInfo = isset($info);
+$albumInfo = isset($info) && $info == 1;
 
 //Hack to prevent albums with no images
 $limit = $request['cols'] * $request['rows'] + 5;
