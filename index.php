@@ -41,6 +41,13 @@ if(isset($_SERVER['HTTP_REFERER'])){
   ga('send', 'pageview');
 
 </script>
+<style>
+
+img{
+    max-width:1200px;
+}
+
+</style>
 </head>
 
 
@@ -64,10 +71,11 @@ if(isset($_SERVER['HTTP_REFERER'])){
 <center>
 <h2>Last.fm Album Collage Generator</h2>
 </header><center>
-
+<div class="image" style="max-width: 1200px;">
 <?php 
 	if(isset($_POST['name']) && isset($_POST['period']) && isset($_POST['width']) || !empty($_POST)){
-		echo "<img src=\"http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']."lastfm.php?user=".$_POST['name']."&period=".$_POST['period']."&cols=".$_POST['width']."&rows=".$_POST['len']."\"></img>\n";
+		echo '<a href="http://content.paddez.com/images/'.strtolower($_POST['name']).'-'.$_POST['period'].'.jpg">';
+		echo "<img src=\"http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']."lastfm.php?user=".$_POST['name']."&period=".$_POST['period']."&cols=".$_POST['width']."&rows=".$_POST['len']."\"></img></a>\n";
 	}
 	else {
 		echo "<img src=\"https://static.paddez.com/images/notload.gif\"></img>\n";
@@ -78,7 +86,7 @@ if(isset($_SERVER['HTTP_REFERER'])){
 		echo "<p>Static Link: <a href=\"$link\">$link</a> </p>";
 	}
 ?>
-
+</div>
 </section>
 <section>
 <article class="main">
