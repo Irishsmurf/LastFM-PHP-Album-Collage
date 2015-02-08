@@ -134,7 +134,7 @@ for($x=4; $x<=10; $x++){
 </td>
 </tr>
 <tr>
-<td class="label"> Album Info: </td>
+<td class="label"> Album Captions: </td>
 <td>
 <input type="checkbox" name="info" value="1">
 </td>
