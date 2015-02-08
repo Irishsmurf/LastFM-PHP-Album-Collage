@@ -137,7 +137,6 @@ function createCollage($covers, $quality ,$totalSize, $cols, $rows, $albumInfo)
 		if($albumInfo)
 		{
 			$font = "resources/OpenSans-Regular.ttf";
-        	$background = imagecolorallocate($image, 0xF0, 0xF0, 0xF0);
 			$white = imagecolorallocate($image, 255, 255, 255);		
 			$black = imagecolorallocate($image, 0, 0, 0);		
 			imagettfstroketext($image, 10, 0, 5, 20, $white, $black, $font, $rawdata['artist'], 1);
