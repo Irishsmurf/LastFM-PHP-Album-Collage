@@ -31,6 +31,9 @@
 	1.1
 		Implemented Composer for managing dependancies.
 
+	1.2
+		Album information captions (Artist, Album)
+
 */
 //Grabs the query included in the URL.
 
@@ -70,12 +73,6 @@ function getImages($coverUrls)
 	$i = 0;
 	foreach($coverUrls as $url)
 	{
-		//Check if no image exists.
-    	if (strpos($url['url'], 'noimage') != false) 
-		{
-			error_log('No album art for - '.$url['artist'].' - '.$url['album']);
-			continue;
-       	}
 		$chs[$i] = curl_init($url['url']);
 		curl_setopt($chs[$i], CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($chs[$i], CURLOPT_USERAGENT, 'www.paddez.com/lastfm/');
@@ -169,6 +166,7 @@ function imagettfstroketext(&$image, $size, $angle, $x, $y, &$textcolor, &$strok
 }
 
 
+
 function getArt($albums, $quality)
 {
     /*
@@ -181,12 +179,17 @@ function getArt($albums, $quality)
     $artUrl = null;
     foreach($albums as $album)
     {
-    	$url = $album->{'image'}[$quality]->{'#text'};
-
+		$url = $album->{'image'}[$quality]->{'#text'};
+		
+		if(strpos($url, 'noimage') != false) 
+		{
+			error_log('No album art for - '.$album->{'artist'}->{'name'}.' - '.$album->{'name'});
+			continue;
+		}
+		
 		$artUrl[$i]['artist'] = $album->{'artist'}->{'name'};
 		$artUrl[$i]['album'] = $album->{'name'};
 		$artUrl[$i]['url'] = $url;
-			
         $i++;
     }
 
