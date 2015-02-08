@@ -92,16 +92,18 @@ function getImages($coverUrls)
 	$i = 0;
 	foreach($chs as $ch)
 	{
-		$images[$i] = curl_multi_getcontent($ch);
+		$images[$i]['data'] = curl_multi_getcontent($ch);
+		$images[$i]['artist'] = $coverUrls[$i]['artist'];
+		$images[$i]['album'] = $coverUrls[$i]['album'];
 		curl_multi_remove_handle($mh, $ch);
-        $i++;
+		$i++;
 	}
 
 	curl_multi_close($mh);
 	return $images;
 }
 
-function createCollage($covers, $quality ,$totalSize, $cols, $rows)
+function createCollage($covers, $quality ,$totalSize, $cols, $rows, $albumInfo)
 {
     switch ($quality)
     {
@@ -128,10 +130,22 @@ function createCollage($covers, $quality ,$totalSize, $cols, $rows)
 
     $i = 1;
 	$images = getImages($covers);
+
     foreach($images as $rawdata)
     {
-		$image = imagecreatefromstring($rawdata);
-        imagecopy($canvas, $image, $coords['x'], $coords['y'], 0, 0, $pixels, $pixels);
+		$image = imagecreatefromstring($rawdata['data']);
+		if($albumInfo)
+		{
+			$font = "resources/OpenSans-Regular.ttf";
+        	$background = imagecolorallocate($image, 0xF0, 0xF0, 0xF0);
+			$white = imagecolorallocate($image, 255, 255, 255);		
+			$black = imagecolorallocate($image, 0, 0, 0);		
+			imagettfstroketext($image, 10, 0, 5, 20, $white, $black, $font, $rawdata['artist'], 1);
+			imagettfstroketext($image, 10, 0, 5, 32, $white, $black, $font, $rawdata['album'], 1);
+		}
+
+		imagecopy($canvas, $image, $coords['x'], $coords['y'], 0, 0, $pixels, $pixels);
+
         $coords['x'] += $pixels;
         
         if($i % $cols == 0)
@@ -143,8 +157,16 @@ function createCollage($covers, $quality ,$totalSize, $cols, $rows)
         $i++;
 
     }
-
     return $canvas;
+}
+
+function imagettfstroketext(&$image, $size, $angle, $x, $y, &$textcolor, &$strokecolor, $fontfile, $text, $px) {
+ 
+    for($c1 = ($x-abs($px)); $c1 <= ($x+abs($px)); $c1++)
+        for($c2 = ($y-abs($px)); $c2 <= ($y+abs($px)); $c2++)
+            $bg = imagettftext($image, $size, $angle, $c1, $c2, $strokecolor, $fontfile, $text);
+ 
+   return imagettftext($image, $size, $angle, $x, $y, $textcolor, $fontfile, $text);
 }
 
 
@@ -214,6 +236,7 @@ $request['user'] = $user;
 $request['period'] = $period;
 $request['cols'] = $cols;
 $request['rows'] = $rows;
+$albumInfo = isset($info);
 
 //Hack to prevent albums with no images
 $limit = $request['cols'] * $request['rows'] + 5;
@@ -228,7 +251,6 @@ if(empty($config['bucket']) && empty($config['api_key']))
 $key = 'images/'.$request['user'].'-'.$request['period'].'.jpg';
 
 $lastfmApi = "http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=".$request['user']."&period=".$request['period']."&api_key=".$config['api_key']."&limit=$limit&format=json";
-
 $validUser = "http://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=".$request['user']."&api_key=990bffa4bfec47d7e826740f266d3e75&format=json";
 
 
@@ -267,7 +289,8 @@ if(file_exists($filename))
 
 $albums = getAlbums(json_decode($json));
 $covers = getArt($albums, 3);
-$image = createCollage($covers, 3, 0, $cols, $rows);
+
+$image = createCollage($covers, 3, 0, $cols, $rows, $albumInfo);
 
 header("Content-Type: image/jpeg");
 imagejpeg($image);

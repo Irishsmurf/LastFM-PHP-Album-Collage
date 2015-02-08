@@ -41,6 +41,13 @@ if(isset($_SERVER['HTTP_REFERER'])){
   ga('send', 'pageview');
 
 </script>
+<style>
+
+img{
+    max-width:1200px;
+}
+
+</style>
 </head>
 <body>
 <a href="https://github.com/Irishsmurf/LastFM-PHP-Album-Collage"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 5;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
@@ -63,10 +70,11 @@ if(isset($_SERVER['HTTP_REFERER'])){
 <center>
 <h2>Last.fm Album Collage Generator</h2>
 </header><center>
-
+<div class="image" style="max-width: 1200px;">
 <?php 
 	if(isset($_POST['name']) && isset($_POST['period']) && isset($_POST['width']) || !empty($_POST)){
-		echo "<img src=\"http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']."lastfm.php?user=".$_POST['name']."&period=".$_POST['period']."&cols=".$_POST['width']."&rows=".$_POST['len']."\"></img>\n";
+		echo "<a href=\"http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']."lastfm.php?user=".$_POST['name']."&period=".$_POST['period']."&cols=".$_POST['width']."&rows=".$_POST['len']."&info=".$_POST['info']."\">\n";
+		echo "<img src=\"http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']."lastfm.php?user=".$_POST['name']."&period=".$_POST['period']."&cols=".$_POST['width']."&rows=".$_POST['len']."&info=".$_POST['info']."\"></img></a>\n";
 	}
 	else {
 		echo "<img src=\"https://static.paddez.com/images/notload.gif\"></img>\n";
@@ -77,7 +85,7 @@ if(isset($_SERVER['HTTP_REFERER'])){
 		echo "<p>Static Link: <a href=\"$link\">$link</a> </p>";
 	}
 ?>
-
+</div>
 </section>
 <section>
 <article class="main">
@@ -124,6 +132,12 @@ for($x=4; $x<=10; $x++){
 <option value="12month">Last 12 Months</option>
 </select>
 </td>
+</tr>
+<tr>
+<td class="label"> Album Info: </td>
+<td>
+<input type="checkbox" name="info" value="1">
+</td>
 </table>
 <br />
 <input type=submit value="Submit" name="submit" onClick="changeImage();">
@@ -146,7 +160,7 @@ for($x=4; $x<=10; $x++){
 <h3>About</h3>
 </header>
 <p>Create an album collage from your Last.fm scrobbles</p>
-<p>If you run into any issues or have any suggestions for the LastFM tool- please drop me a mail at dave@paddez.com. Thanks!</p></section>
+<p>If you run into any issues or have any suggestions for the LastFM tool- please drop me a mail at dave@paddez.com.</p></section>
 <section id ="links">
 <header>
 <h3> Links </h3>
