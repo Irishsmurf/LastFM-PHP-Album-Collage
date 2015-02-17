@@ -10,6 +10,7 @@
 	Version 0.9 = 02/8/2011
     Version 1.0 = 26/10/2014
 	Version 1.1 = 28/10/2014
+	Version 1.2 = 10/02/2015
 
 	0.5
 		Minor Bugfixes
@@ -33,7 +34,7 @@
 
 	1.2
 		Album information captions (Artist, Album)
-
+	
 */
 //Grabs the query included in the URL.
 
