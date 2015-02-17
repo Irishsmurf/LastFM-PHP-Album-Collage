@@ -1,7 +1,9 @@
 <?php
 /*
-    t
+   
 	Last.fm Album Collage
+	Runs on Elastic Beanstalk
+
 	David Kernan
 	
 	Version 0.5 = 26/06/2010
