@@ -1,43 +1,43 @@
 <?php
 /*
-   
-	Last.fm Album Collage
-	Runs on Elastic Beanstalk
 
-	David Kernan
-	
-	Version 0.5 = 26/06/2010
-	Version 0.6 = 17/9/2010
-	Version 0.7 = 10/6/2011
-	Version 0.9 = 02/8/2011
-    Version 1.0 = 26/10/2014
-	Version 1.1 = 28/10/2014
-	Version 1.2 = 10/02/2015
+   Last.fm Album Collage
+   Runs on Elastic Beanstalk
 
-	0.5
-		Minor Bugfixes
-	
-	0.6
-		Invalid Headers being sent, corrected.
-		Cache timeout increased to 10 minutes.
-	0.7
-		Removed invalid images showing up in Result, will now only show the albums tha have a cover art in the Last.fm database
-	0.9
-		Updated Webpage to include loading
-		Included Higher Definition Collages
+   David Kernan
 
-	1.0
-		Elastic Beanstalk Support
-		Amazon S3 Support
-		Total code refiguration to make a bit more sense
-	
-	1.1
-		Implemented Composer for managing dependancies.
+   Version 0.5 = 26/06/2010
+   Version 0.6 = 17/9/2010
+   Version 0.7 = 10/6/2011
+   Version 0.9 = 02/8/2011
+   Version 1.0 = 26/10/2014
+   Version 1.1 = 28/10/2014
+   Version 1.2 = 10/02/2015
 
-	1.2
-		Album information captions (Artist, Album)
-	
-*/
+   0.5
+   Minor Bugfixes
+
+   0.6
+   Invalid Headers being sent, corrected.
+   Cache timeout increased to 10 minutes.
+   0.7
+   Removed invalid images showing up in Result, will now only show the albums tha have a cover art in the Last.fm database
+   0.9
+   Updated Webpage to include loading
+   Included Higher Definition Collages
+
+   1.0
+   Elastic Beanstalk Support
+   Amazon S3 Support
+   Total code refiguration to make a bit more sense
+
+   1.1
+   Implemented Composer for managing dependancies.
+
+   1.2
+   Album information captions (Artist, Album)
+
+ */
 //Grabs the query included in the URL.
 
 include('config.inc.php');
@@ -51,20 +51,20 @@ use Guzzle\Cache\DoctrineCacheAdapter;
 
 function getJson($url)
 {
-    $curl = curl_init($url);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_USERAGENT, 'www.paddez.com/lastfm/');
-    $response = curl_exec($curl);
+	$curl = curl_init($url);
+	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($curl, CURLOPT_USERAGENT, 'www.paddez.com/lastfm/');
+	$response = curl_exec($curl);
 
-    if($response == false)
-    {
-        $info = curl_getinfo($curl);
-        curl_close($curl);
-        die('Error: '.var_export($info));
-    }
+	if($response == false)
+	{
+		$info = curl_getinfo($curl);
+		curl_close($curl);
+		die('Error: '.var_export($info));
+	}
 
-    curl_close($curl);
-    return ($response);
+	curl_close($curl);
+	return ($response);
 }
 
 function getImages($coverUrls)
@@ -88,7 +88,7 @@ function getImages($coverUrls)
 		curl_multi_exec($mh, $running);
 		curl_multi_select($mh);
 	} while($running > 0);
-	
+
 	$i = 0;
 	foreach($chs as $ch)
 	{
@@ -105,34 +105,34 @@ function getImages($coverUrls)
 
 function createCollage($covers, $quality ,$totalSize, $cols, $rows, $albumInfo)
 {
-    switch ($quality)
-    {
-        case 0:
-            $pixels = 34;
-            break;
-        case 1:
-            $pixels = 64;
-            break;
-        case 2:
-            $pixels = 126;
-            break;
-        case 3:
-            $pixels = 300;
-            break;
-    }
+	switch ($quality)
+	{
+		case 0:
+			$pixels = 34;
+			break;
+		case 1:
+			$pixels = 64;
+			break;
+		case 2:
+			$pixels = 126;
+			break;
+		case 3:
+			$pixels = 300;
+			break;
+	}
 
-    $canvas = imagecreatetruecolor($pixels * $cols, $pixels * $rows);
-    $backgroundColor = imagecolorallocate($canvas, 255, 255, 255);
-    imagefill($canvas, 0, 0, $backgroundColor);
-    
-    $coords['x'] = 0;
-    $coords['y'] = 0;
+	$canvas = imagecreatetruecolor($pixels * $cols, $pixels * $rows);
+	$backgroundColor = imagecolorallocate($canvas, 255, 255, 255);
+	imagefill($canvas, 0, 0, $backgroundColor);
 
-    $i = 1;
+	$coords['x'] = 0;
+	$coords['y'] = 0;
+
+	$i = 1;
 	$images = getImages($covers);
 
-    foreach($images as $rawdata)
-    {
+	foreach($images as $rawdata)
+	{
 		$image = imagecreatefromstring($rawdata['data']);
 		if($albumInfo)
 		{
@@ -145,63 +145,63 @@ function createCollage($covers, $quality ,$totalSize, $cols, $rows, $albumInfo)
 
 		imagecopy($canvas, $image, $coords['x'], $coords['y'], 0, 0, $pixels, $pixels);
 
-        $coords['x'] += $pixels;
-        
-        if($i % $cols == 0)
-        {
-            $coords['y'] += 300;
-            $coords['x'] = 0;
-        }
+		$coords['x'] += $pixels;
 
-        $i++;
+		if($i % $cols == 0)
+		{
+			$coords['y'] += 300;
+			$coords['x'] = 0;
+		}
 
-    }
-    return $canvas;
+		$i++;
+
+	}
+	return $canvas;
 }
 
 function imagettfstroketext(&$image, $size, $angle, $x, $y, &$textcolor, &$strokecolor, $fontfile, $text, $px) {
- 
-    for($c1 = ($x-abs($px)); $c1 <= ($x+abs($px)); $c1++)
-        for($c2 = ($y-abs($px)); $c2 <= ($y+abs($px)); $c2++)
-            $bg = imagettftext($image, $size, $angle, $c1, $c2, $strokecolor, $fontfile, $text);
- 
-   return imagettftext($image, $size, $angle, $x, $y, $textcolor, $fontfile, $text);
+
+	for($c1 = ($x-abs($px)); $c1 <= ($x+abs($px)); $c1++)
+		for($c2 = ($y-abs($px)); $c2 <= ($y+abs($px)); $c2++)
+			$bg = imagettftext($image, $size, $angle, $c1, $c2, $strokecolor, $fontfile, $text);
+
+	return imagettftext($image, $size, $angle, $x, $y, $textcolor, $fontfile, $text);
 }
 
 
 
 function getArt($albums, $quality)
 {
-    /*
-        0 = Low (34)
-        1 = Medium (64s)
-        2 = Large (126)
-        3 = xlarge (300)
-    */
-    $i = 0;
-    $artUrl = null;
-    foreach($albums as $album)
-    {
+	/*
+	   0 = Low (34)
+	   1 = Medium (64s)
+	   2 = Large (126)
+	   3 = xlarge (300)
+	 */
+	$i = 0;
+	$artUrl = null;
+	foreach($albums as $album)
+	{
 		$url = $album->{'image'}[$quality]->{'#text'};
-		
+
 		if(strpos($url, 'noimage') != false) 
 		{
 			error_log('No album art for - '.$album->{'artist'}->{'name'}.' - '.$album->{'name'});
 			continue;
 		}
-		
+
 		$artUrl[$i]['artist'] = $album->{'artist'}->{'name'};
 		$artUrl[$i]['album'] = $album->{'name'};
 		$artUrl[$i]['url'] = $url;
-        $i++;
-    }
+		$i++;
+	}
 
-    return $artUrl;
+	return $artUrl;
 }
 
 function getAlbums($json)
 {
-    return $json->{'topalbums'}->{'album'};
+	return $json->{'topalbums'}->{'album'};
 }
 
 function errorImage($message)
@@ -228,8 +228,8 @@ if(!isset($config))
 
 $cache = new DoctrineCacheAdapter(new FilesystemCache('/tmp/cache'));
 $s3 = S3Client::factory(array(
-    'credentials.cache' => $cache,
-	'region' => 'eu-west-1'));
+			'credentials.cache' => $cache,
+			'region' => 'eu-west-1'));
 
 
 $url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; 
@@ -267,13 +267,13 @@ if(isset($infoJson->{"error"}))
 	error_log($infoJson->{"message"}." - ".$request['user']);
 	imagepng(errorImage($infoJson->{"message"}));
 	$sns = SnsClient::factory(array(
-		'credentials.cache' => $cache,
-		'region' => 'eu-west-1'));
+				'credentials.cache' => $cache,
+				'region' => 'eu-west-1'));
 	$sns->publish(array(
-		'TopicArn' => 'arn:aws:sns:eu-west-1:346795263809:LastFM-Errors',
-		'Message' => $infoJson->{"message"}." - ".$request['user'],
-		'Subject' => "Lastfm Error: ".$infoJson->{"error"}
-		));
+				'TopicArn' => 'arn:aws:sns:eu-west-1:346795263809:LastFM-Errors',
+				'Message' => $infoJson->{"message"}." - ".$request['user'],
+				'Subject' => "Lastfm Error: ".$infoJson->{"error"}
+				));
 
 	return;
 }
@@ -302,12 +302,12 @@ imagejpeg($image);
 imagejpeg($image, $filename);
 
 $result = $s3->putObject(array(
-    'Bucket' => $bucket,
-    'Key'   => strtolower($key),
-    'SourceFile' => $filename,
-    'ACL'   => 'public-read',
-    'ContentType' => 'image/jpeg'
-    ));
+			'Bucket' => $bucket,
+			'Key'   => strtolower($key),
+			'SourceFile' => $filename,
+			'ACL'   => 'public-read',
+			'ContentType' => 'image/jpeg'
+			));
 
 imagedestroy($image);
 ?>
