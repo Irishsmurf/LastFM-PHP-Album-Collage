@@ -256,8 +256,7 @@ if(empty($config['bucket']) && empty($config['api_key']))
 $key = 'images/'.$request['user'].'-'.$request['period'].'.jpg';
 
 $lastfmApi = "http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=".$request['user']."&period=".$request['period']."&api_key=".$config['api_key']."&limit=$limit&format=json";
-$validUser = "http://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=".$request['user']."&api_key=990bffa4bfec47d7e826740f266d3e75&format=json";
-
+$validUser = "http://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=".$request['user']."&api_key=".$config['api_key']."&format=json";
 
 $infoJson = json_decode(getJson($validUser));
 
