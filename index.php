@@ -13,38 +13,38 @@ if(isset($_SERVER['HTTP_REFERER'])){
 
 <head>
 <meta name="google-site-verification" content="-KVdJ1exOkKJOnzSebdMNGStyc68M8s7p09zpb-Lfk0" />
-	<title>Paddez</title>
-   	<link rel="stylesheet" href="https://static.paddez.com/style.css" type="text/css" media="screen" />
-    <link rel="SHORTCUT ICON" href="https://static.paddez.com/images/faviocon.ico">
+<title>Paddez</title>
+<link rel="stylesheet" href="https://static.paddez.com/style.css" type="text/css" media="screen" />
+<link rel="SHORTCUT ICON" href="https://static.paddez.com/images/faviocon.ico">
 	<script>
+if(document.images)
+{
+	var load = new Image();
+	load.src = "https://static.paddez.com/images/load.gif";
+}
+function changeImage()
+{
 	if(document.images)
-	{
-		var load = new Image();
-		load.src = "https://static.paddez.com/images/load.gif";
+	{				
+		document.place.src = "https://static.paddez.com/images/load.gif";
 	}
-	function changeImage()
-	{
-		if(document.images)
-		{				
-			document.place.src = "https://static.paddez.com/images/load.gif";
-		}
-		
-	}
-	</script>
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-48104767-1', 'paddez.com');
-  ga('send', 'pageview');
+}
+</script>
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+ })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-48104767-1', 'paddez.com');
+ga('send', 'pageview');
 
 </script>
 <style>
 
 img{
-    max-width:1200px;
+	max-width:1200px;
 }
 
 </style>
@@ -72,18 +72,18 @@ img{
 </header><center>
 <div class="image" style="max-width: 1200px;">
 <?php 
-	if(isset($_POST['name']) && isset($_POST['period']) && isset($_POST['width']) || !empty($_POST)){
-		echo "<a href=\"http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']."lastfm.php?user=".$_POST['name']."&period=".$_POST['period']."&cols=".$_POST['width']."&rows=".$_POST['len']."&info=".$_POST['info']."\">\n";
-		echo "<img src=\"http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']."lastfm.php?user=".$_POST['name']."&period=".$_POST['period']."&cols=".$_POST['width']."&rows=".$_POST['len']."&info=".$_POST['info']."\"></img></a>\n";
-	}
-	else {
-		echo "<img src=\"https://static.paddez.com/images/notload.gif\"></img>\n";
-	}
+if(isset($_POST['name']) && isset($_POST['period']) && isset($_POST['width']) || !empty($_POST)){
+	echo "<a href=\"http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']."lastfm.php?user=".$_POST['name']."&period=".$_POST['period']."&cols=".$_POST['width']."&rows=".$_POST['len']."&info=".$_POST['info']."\">\n";
+	echo "<img src=\"http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']."lastfm.php?user=".$_POST['name']."&period=".$_POST['period']."&cols=".$_POST['width']."&rows=".$_POST['len']."&info=".$_POST['info']."\"></img></a>\n";
+}
+else {
+	echo "<img src=\"https://static.paddez.com/images/notload.gif\"></img>\n";
+}
 
-	if(!empty($_POST)){
-		$link = 'http://content.paddez.com/images/'.strtolower($_POST['name']).'-'.$_POST['period'].'.jpg';
-		echo "<p>Static Link: <a href=\"$link\">$link</a> </p>";
-	}
+if(!empty($_POST)){
+	$link = 'http://content.paddez.com/images/'.strtolower($_POST['name']).'-'.$_POST['period'].'.jpg';
+	echo "<p>Static Link: <a href=\"$link\">$link</a> </p>";
+}
 ?>
 </div>
 </section>
@@ -172,7 +172,7 @@ for($x=4; $x<=10; $x++){
 <li id="fast1"><a href="http://pastebin.com">Pastebin</a></li>
 <li id="fast1"><a href="http://www.dcu.ie"> My College!</a></li>
 
- </ul>
+</ul>
 </div>
 </footer>
 </body>
