@@ -1,12 +1,22 @@
-A Script that takes in < last.fm username> and collages their most played albums in a grid
+# LastFM PHP Album Collage
+
+A Script that takes in `LastFM username` and collages their most played albums in a grid.
 Uses S3 to store the images in a persistant manner without filling up the local disk.
 
-Tested using PHP 5.5 and requires PHP-GD library for building the images
+---
 
-Requires AWS IAM Roles running on your instance.
+**Tested using `PHP 5.5` and requires `PHP-GD library` for building the images.**
 
-Below is the sample JSON for your IAM Role:
+---
 
+## Requirements
+
+* **AWS IAM Roles** (running on your instance)
+* **LastFM API Key**
+
+### IAM Role Sample JSON:
+
+```json
 {
   "Statement": [
     {
@@ -28,14 +38,14 @@ Below is the sample JSON for your IAM Role:
     }
   ]
 }
+```
 
+### Last.FM API Key
 
-It also requires Last.fm keys:
+Don't forget to fill you API Key in the `config.inc.php` file!
 
+```php
 $config['api_key'] = '<LastFM Key>'
+```
 
-
-If no config.inc.php file is found, it will use the following environment variables:
-
-api_key,
-bucket;
+If no `config.inc.php` file is found, it will use the following environment variables: `api_key` and `bucket`.
