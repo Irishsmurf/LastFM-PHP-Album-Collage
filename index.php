@@ -87,7 +87,7 @@ if(!empty($_POST)){
 <select name="len">
 <option value="3" selected>3</option>
 <?php
-for($x=4; $x<=10; $x++){
+for($x=4; $x<=15; $x++){
 	echo "<option value=\"$x\">$x</option>\n";
 }
 ?>
@@ -98,7 +98,7 @@ for($x=4; $x<=10; $x++){
 <select name="width">
 <option value="3" selected>3</option>
 <?php
-for($x=4; $x<=10; $x++){
+for($x=4; $x<=15; $x++){
 	echo "<option value=\"$x\">$x</option>\n";
 }
 ?>
