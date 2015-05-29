@@ -54,9 +54,10 @@ function getJson($url)
 	$curl = curl_init($url);
 	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($curl, CURLOPT_USERAGENT, 'www.paddez.com/lastfm/');
+	curl_setopt($curl, CURLOPT_FAILONERROR, true);
 	$response = curl_exec($curl);
 
-	if($response == false)
+	if($response == false || curl_errno($response))
 	{
 		$info = curl_getinfo($curl);
 		curl_close($curl);
