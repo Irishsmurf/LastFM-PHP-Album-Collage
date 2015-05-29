@@ -211,7 +211,7 @@ function getArt($albums, $quality)
 					'picture-index' => array('S' => $url),
 					'artist' => array('S' =>  $artUrl[$i]['artist']),
 					'album' => array('S' => $artUrl[$i]['album']),
-					's3key' => array('S' => 'content.paddez.com/mbid/'.$mbid)
+					's3key' => array('S' => 'content.paddez.com/mbid/'.$artUrl[$i]['mbid'])
 					)));
 		}
 		catch(Exception $e)
