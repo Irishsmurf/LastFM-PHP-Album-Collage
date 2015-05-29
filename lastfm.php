@@ -210,7 +210,8 @@ function getArt($albums, $quality)
 					'mbid'	=> array('S' => $artUrl[$i]['mbid']),
 					'picture-index' => array('S' => $url),
 					'artist' => array('S' =>  $artUrl[$i]['artist']),
-					'album' => array('S' => $artUrl[$i]['album'])
+					'album' => array('S' => $artUrl[$i]['album']),
+					's3key' => array('S' => 'content.paddez.com/mbid/'.$mbid)
 					)));
 		}
 		catch(Exception $e)
@@ -334,4 +335,7 @@ $result = $s3->putObject(array(
 			));
 
 imagedestroy($image);
+
+
+
 ?>
