@@ -200,6 +200,7 @@ function getArt($albums, $quality)
 
 		$artUrl[$i]['artist'] = $album->{'artist'}->{'name'};
 		$artUrl[$i]['album'] = $album->{'name'};
+		$artUrl[$i]['mbid'] = $album->{'mbid'};
 		$artUrl[$i]['url'] = $url;
 
 		try{
