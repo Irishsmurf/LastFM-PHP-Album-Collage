@@ -46,7 +46,7 @@ include('vendor/autoload.php');
 use Aws\S3\S3Client;
 use Aws\S3\Exception\S3Exception;
 use Aws\Sns\SnsClient;
-use Aws\DynamoDb\DynamoDClient;
+use Aws\DynamoDb\DynamoDbClient;
 
 use Doctrine\Common\Cache\FilesystemCache;
 use Guzzle\Cache\DoctrineCacheAdapter;
