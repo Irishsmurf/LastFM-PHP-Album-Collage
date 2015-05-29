@@ -202,16 +202,20 @@ function getArt($albums, $quality)
 		$artUrl[$i]['album'] = $album->{'name'};
 		$artUrl[$i]['url'] = $url;
 
-		$result = $db->putItem(array(
-			'TableName' => 'lastfm-albums',
-			'Item' => array(
-				'mbid'	=> array('S' => $artUrl[$i]['mbid']),
-				'picture-index' => array('S' => $url),
-				'artist' => array('S' =>  $artUrl[$i]['artist']),
-				'album' => array('S' => $artUrl[$i]['album'])
-				)));
-
-		error_log($result);
+		try{
+			$result = $db->putItem(array(
+				'TableName' => 'lastfm-albums',
+				'Item' => array(
+					'mbid'	=> array('S' => $artUrl[$i]['mbid']),
+					'picture-index' => array('S' => $url),
+					'artist' => array('S' =>  $artUrl[$i]['artist']),
+					'album' => array('S' => $artUrl[$i]['album'])
+					)));
+		}
+		catch(Exception $e)
+		{
+			error_log($result);
+		}
 
 		$i++;
 	}
