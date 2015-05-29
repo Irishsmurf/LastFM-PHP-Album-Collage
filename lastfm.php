@@ -202,7 +202,7 @@ function getArt($albums, $quality)
 		$artUrl[$i]['album'] = $album->{'name'};
 		$artUrl[$i]['url'] = $url;
 
-		$result = $client->putItem(array(
+		$result = $db->putItem(array(
 			'TableName' => 'lastfm-albums',
 			'Item' => array(
 				'mbid'	=> array('S' => $artUrl[$i]['mbid']),
