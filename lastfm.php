@@ -46,6 +46,8 @@ include('vendor/autoload.php');
 use Aws\S3\S3Client;
 use Aws\S3\Exception\S3Exception;
 use Aws\Sns\SnsClient;
+use Aws\DynamoDb\DynamoDClient;
+
 use Doctrine\Common\Cache\FilesystemCache;
 use Guzzle\Cache\DoctrineCacheAdapter;
 
@@ -181,6 +183,11 @@ function getArt($albums, $quality)
 	 */
 	$i = 0;
 	$artUrl = null;
+	$db = DynamoDbClient::factory(array(
+		'credentials.cache' => $cache,
+		'region' => 'eu-west-1'
+		));
+
 	foreach($albums as $album)
 	{
 		$url = $album->{'image'}[$quality]->{'#text'};
@@ -194,6 +201,18 @@ function getArt($albums, $quality)
 		$artUrl[$i]['artist'] = $album->{'artist'}->{'name'};
 		$artUrl[$i]['album'] = $album->{'name'};
 		$artUrl[$i]['url'] = $url;
+
+		$result = $client->putItem(array(
+			'TableName' = 'lastfm-albums',
+			'Item' => array(
+				'mbid'	=> array('S' => $artUrl[$i]['mbid']),
+				'picture-index' => array('S' => $url),
+				'artist' => array('S' =>  $artUrl[$i]['artist']),
+				'album' => array('S' => $artUrl[$i]['album'])
+				)));
+
+		error_log($result);
+
 		$i++;
 	}
 
