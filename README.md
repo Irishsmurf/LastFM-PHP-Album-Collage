@@ -49,3 +49,6 @@ $config['api_key'] = '<LastFM Key>'
 ```
 
 If no `config.inc.php` file is found, it will use the following environment variables: `api_key` and `bucket`.
+
+### Credits
+Japanese TrueType font by lindwurm - https://github.com/Koruri/Koruri under Apache v2.0
