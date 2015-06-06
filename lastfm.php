@@ -139,7 +139,7 @@ function createCollage($covers, $quality ,$totalSize, $cols, $rows, $albumInfo)
 		$image = imagecreatefromstring($rawdata['data']);
 		if($albumInfo)
 		{
-			$font = "resources/NotoSans-Regular.ttf";
+			$font = "resources/Koruri-Regular.ttf";
 			$white = imagecolorallocate($image, 255, 255, 255);		
 			$black = imagecolorallocate($image, 0, 0, 0);		
 			imagettfstroketext($image, 10, 0, 5, 20, $white, $black, $font, $rawdata['artist'], 1);
