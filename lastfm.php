@@ -46,7 +46,7 @@ include('vendor/autoload.php');
 use Aws\S3\S3Client;
 use Aws\S3\Exception\S3Exception;
 use Aws\Sns\SnsClient;
-use Aws\DynamoDb\DynamoDbClient;
+use Aws\Sqs\SqsClient;
 
 use Doctrine\Common\Cache\FilesystemCache;
 use Guzzle\Cache\DoctrineCacheAdapter;
@@ -183,11 +183,12 @@ function getArt($albums, $quality)
 	 */
 	$i = 0;
 	$artUrl = null;
-	$db = DynamoDbClient::factory(array(
+	$sqs = SqsClient::factory(array(
 		'credentials.cache' => $cache,
 		'region' => 'eu-west-1'
-		));
+	));
 
+	
 	foreach($albums as $album)
 	{
 		$url = $album->{'image'}[$quality]->{'#text'};
@@ -197,28 +198,23 @@ function getArt($albums, $quality)
 			error_log('No album art for - '.$album->{'artist'}->{'name'}.' - '.$album->{'name'});
 			continue;
 		}
-
+	
 		$artUrl[$i]['artist'] = $album->{'artist'}->{'name'};
 		$artUrl[$i]['album'] = $album->{'name'};
 		$artUrl[$i]['mbid'] = $album->{'mbid'};
 		$artUrl[$i]['url'] = $url;
-
-		try{
-			$result = $db->putItem(array(
-				'TableName' => 'lastfm-albums',
-				'Item' => array(
-					'mbid'	=> array('S' => $artUrl[$i]['mbid']),
-					'picture-index' => array('S' => $url),
-					'artist' => array('S' =>  $artUrl[$i]['artist']),
-					'album' => array('S' => $artUrl[$i]['album']),
-					's3key' => array('S' => 'content.paddez.com/mbid/'.$artUrl[$i]['mbid'])
-					)));
+		
+		try
+		{	
+			$result = $sqs->sendMessage(array(
+				'QueueUrl' => 'https://sqs.eu-west-1.amazonaws.com/346795263809/lastfm-albums',
+				'MessageBody' => json_encode($artUrl[$i])
+			));
 		}
 		catch(Exception $e)
 		{
-			error_log($result);
+			error_log("SQS Error = ".$artUrl[$i]);
 		}
-
 		$i++;
 	}
 
