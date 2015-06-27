@@ -216,6 +216,7 @@ function getArt($albums, $quality)
 		$artUrl[$i]['artist'] = $album->{'artist'}->{'name'};
 		$artUrl[$i]['album'] = $album->{'name'};
 		$artUrl[$i]['mbid'] = $album->{'mbid'};
+		$artUrl[$i]['playcount'] = $album->{'playcount'};
 		$artUrl[$i]['url'] = $url;
 		
 		try
@@ -277,7 +278,7 @@ $request['user'] = $user;
 $request['period'] = $period;
 $request['cols'] = $cols;
 $request['rows'] = $rows;
-$playcount = isset($playcount) && $playcount == 1;
+$plays = isset($playcount) && $playcount == 1;
 $albumInfo = isset($info) && $info == 1;
 
 //Hack to prevent albums with no images
@@ -331,7 +332,7 @@ if(file_exists($filename))
 $albums = getAlbums(json_decode($json));
 $covers = getArt($albums, 3);
 
-$image = createCollage($covers, 3, 0, $cols, $rows, $albumInfo, $playcount);
+$image = createCollage($covers, 3, 0, $cols, $rows, $albumInfo, $plays);
 
 header("Content-Type: image/jpeg");
 imagejpeg($image);
