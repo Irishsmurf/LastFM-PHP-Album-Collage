@@ -283,7 +283,7 @@ $request['user'] = $user;
 $request['period'] = $period;
 $request['cols'] = $cols;
 $request['rows'] = $rows;
-$playcount = isset($playcount);
+$playcount = isset($playcount) && $playcount == 1;
 $albumInfo = isset($info) && $info == 1;
 
 //Hack to prevent albums with no images
