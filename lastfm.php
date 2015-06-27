@@ -204,6 +204,7 @@ function getArt($albums, $quality)
 		$artUrl[$i]['album'] = $album->{'name'};
 		$artUrl[$i]['mbid'] = $album->{'mbid'};
 		$artUrl[$i]['url'] = $url;
+		error_log("Playcount: ".$album->{'playcount'});
 		$artUrl[$i]['playcount'] = $album->{'playcount'};
 
 		try{
