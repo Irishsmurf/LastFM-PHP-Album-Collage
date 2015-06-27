@@ -124,6 +124,12 @@ for($x=4; $x<=15; $x++){
 <td>
 <input type="checkbox" name="info" value="1">
 </td>
+</tr>
+<td class="label"> Playcount: </td>
+<td>
+<input type="checkbox" name="playcount" value="0">
+</td>
+</tr>
 </table>
 <br />
 <input type=submit value="Submit" name="submit">
