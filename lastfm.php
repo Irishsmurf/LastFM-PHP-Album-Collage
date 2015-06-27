@@ -98,6 +98,7 @@ function getImages($coverUrls)
 		$images[$i]['data'] = curl_multi_getcontent($ch);
 		$images[$i]['artist'] = $coverUrls[$i]['artist'];
 		$images[$i]['album'] = $coverUrls[$i]['album'];
+		$images[$i]['playcount'] = $coverUrls[$i]['playcount'];
 		curl_multi_remove_handle($mh, $ch);
 		$i++;
 	}
@@ -106,7 +107,7 @@ function getImages($coverUrls)
 	return $images;
 }
 
-function createCollage($covers, $quality ,$totalSize, $cols, $rows, $albumInfo)
+function createCollage($covers, $quality ,$totalSize, $cols, $rows, $albumInfo, $playcount)
 {
 	switch ($quality)
 	{
@@ -137,13 +138,26 @@ function createCollage($covers, $quality ,$totalSize, $cols, $rows, $albumInfo)
 	foreach($images as $rawdata)
 	{
 		$image = imagecreatefromstring($rawdata['data']);
-		if($albumInfo)
+		if($albumInfo || $playcount)
 		{
 			$font = "resources/Koruri-Regular.ttf";
 			$white = imagecolorallocate($image, 255, 255, 255);		
-			$black = imagecolorallocate($image, 0, 0, 0);		
-			imagettfstroketext($image, 10, 0, 5, 20, $white, $black, $font, $rawdata['artist'], 1);
-			imagettfstroketext($image, 10, 0, 5, 32, $white, $black, $font, $rawdata['album'], 1);
+			$black = imagecolorallocate($image, 0, 0, 0);
+			if($albumInfo && $playcount)
+			{
+				imagettfstroketext($image, 10, 0, 5, 20, $white, $black, $font, $rawdata['artist'], 1);
+				imagettfstroketext($image, 10, 0, 5, 32, $white, $black, $font, $rawdata['album'], 1);
+				imagettfstroketext($image, 10, 0, 5, 44, $white, $black, $font, "Plays: ".$rawdata['playcount'], 1);
+			}
+			elseif($albumInfo)
+			{
+				imagettfstroketext($image, 10, 0, 5, 20, $white, $black, $font, $rawdata['artist'], 1);
+				imagettfstroketext($image, 10, 0, 5, 32, $white, $black, $font, $rawdata['album'], 1);
+			}
+			elseif($playcount)
+			{
+				imagettfstroketext($image, 10, 0, 5, 20, $white, $black, $font, "Plays: ".$rawdata['playcount'], 1);
+			}
 		}
 
 		imagecopy($canvas, $image, $coords['x'], $coords['y'], 0, 0, $pixels, $pixels);
@@ -188,7 +202,7 @@ function getArt($albums, $quality)
 		'region' => 'eu-west-1'
 	));
 
-	
+
 	foreach($albums as $album)
 	{
 		$url = $album->{'image'}[$quality]->{'#text'};
@@ -263,6 +277,7 @@ $request['user'] = $user;
 $request['period'] = $period;
 $request['cols'] = $cols;
 $request['rows'] = $rows;
+$playcount = isset($playcount) && $playcount == 1;
 $albumInfo = isset($info) && $info == 1;
 
 //Hack to prevent albums with no images
@@ -316,7 +331,7 @@ if(file_exists($filename))
 $albums = getAlbums(json_decode($json));
 $covers = getArt($albums, 3);
 
-$image = createCollage($covers, 3, 0, $cols, $rows, $albumInfo);
+$image = createCollage($covers, 3, 0, $cols, $rows, $albumInfo, $playcount);
 
 header("Content-Type: image/jpeg");
 imagejpeg($image);

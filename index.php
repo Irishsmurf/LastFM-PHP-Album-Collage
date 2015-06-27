@@ -60,7 +60,7 @@ img{
 if(isset($_POST['name']) && isset($_POST['period']) && isset($_POST['width']) || !empty($_POST)){
 //	echo "<a href=\"http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']."lastfm.php?user=".$_POST['name']."&period=".$_POST['period']."&cols=".$_POST['width']."&rows=".$_POST['len']."&info=".$_POST['info']."\">\n";
 	echo '<a href="http://content.paddez.com/images/'.strtolower($_POST['name']).'-'.$_POST['period'].'.jpg">';	
-	echo "<img src=\"http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']."lastfm.php?user=".$_POST['name']."&period=".$_POST['period']."&cols=".$_POST['width']."&rows=".$_POST['len']."&info=".$_POST['info']."\"></img></a>\n";
+	echo "<img src=\"http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']."lastfm.php?user=".$_POST['name']."&period=".$_POST['period']."&cols=".$_POST['width']."&rows=".$_POST['len']."&info=".$_POST['info']."&playcount=".$_POST['playcount']."\"></img></a>\n";
 }
 else {
 	echo "<img src=\"https://static.paddez.com/images/notload.gif\"></img>\n";
@@ -124,6 +124,12 @@ for($x=4; $x<=15; $x++){
 <td>
 <input type="checkbox" name="info" value="1">
 </td>
+</tr>
+<td class="label"> Playcount: </td>
+<td>
+<input type="checkbox" name="playcount" value="1">
+</td>
+</tr>
 </table>
 <br />
 <input type=submit value="Submit" name="submit">
