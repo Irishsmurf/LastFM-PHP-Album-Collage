@@ -98,7 +98,7 @@ function getImages($coverUrls)
 		$images[$i]['data'] = curl_multi_getcontent($ch);
 		$images[$i]['artist'] = $coverUrls[$i]['artist'];
 		$images[$i]['album'] = $coverUrls[$i]['album'];
-		$images[$i]['playcount'] = $coverUrls['playcount'];
+		$images[$i]['playcount'] = $coverUrls[$i]['playcount'];
 		curl_multi_remove_handle($mh, $ch);
 		$i++;
 	}
