@@ -159,13 +159,6 @@ function createCollage($covers, $quality ,$totalSize, $cols, $rows, $albumInfo, 
 				imagettfstroketext($image, 10, 0, 5, 20, $white, $black, $font, "Plays: ".$rawdata['playcount'], 1);
 			}
 		}
-		elseif($playcount)
-		{
-			$font = "resources/Koruri-Regular.ttf";
-			$white = imagecolorallocate($image, 255, 255, 255);
-			$black = imagecolorallocate($image, 0, 0, 0);
-			imagettfstroketext($image, 10, 0, 5, 20, 
-		}
 
 		imagecopy($canvas, $image, $coords['x'], $coords['y'], 0, 0, $pixels, $pixels);
 
