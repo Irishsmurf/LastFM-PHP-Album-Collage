@@ -144,6 +144,7 @@ function createCollage($covers, $quality ,$totalSize, $cols, $rows, $albumInfo)
 			$black = imagecolorallocate($image, 0, 0, 0);		
 			imagettfstroketext($image, 10, 0, 5, 20, $white, $black, $font, $rawdata['artist'], 1);
 			imagettfstroketext($image, 10, 0, 5, 32, $white, $black, $font, $rawdata['album'], 1);
+			imagettfstroketext($image, 10, 0, 5, 44, $white, $black, $font, "test", 1);
 			imagettfstroketext($image, 10, 0, 5, 44, $white, $black, $font, $rawdata['playcount'], 1);
 		}
 
