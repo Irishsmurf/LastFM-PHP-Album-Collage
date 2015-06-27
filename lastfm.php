@@ -144,6 +144,7 @@ function createCollage($covers, $quality ,$totalSize, $cols, $rows, $albumInfo)
 			$black = imagecolorallocate($image, 0, 0, 0);		
 			imagettfstroketext($image, 10, 0, 5, 20, $white, $black, $font, $rawdata['artist'], 1);
 			imagettfstroketext($image, 10, 0, 5, 32, $white, $black, $font, $rawdata['album'], 1);
+			imagettfstroketext($image, 10, 0, 5, 44, $white, $black, $font, $rawdata['playcount'], 1);
 		}
 
 		imagecopy($canvas, $image, $coords['x'], $coords['y'], 0, 0, $pixels, $pixels);
@@ -202,6 +203,7 @@ function getArt($albums, $quality)
 		$artUrl[$i]['album'] = $album->{'name'};
 		$artUrl[$i]['mbid'] = $album->{'mbid'};
 		$artUrl[$i]['url'] = $url;
+		$artUrl[$i]['playcount'] = $album->{'playcount'};
 
 		try{
 			$result = $db->putItem(array(
