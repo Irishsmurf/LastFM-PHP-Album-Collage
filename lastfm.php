@@ -98,6 +98,7 @@ function getImages($coverUrls)
 		$images[$i]['data'] = curl_multi_getcontent($ch);
 		$images[$i]['artist'] = $coverUrls[$i]['artist'];
 		$images[$i]['album'] = $coverUrls[$i]['album'];
+		$images[$i]['playcount'] = $coverUrls['playcount'];
 		curl_multi_remove_handle($mh, $ch);
 		$i++;
 	}
@@ -144,7 +145,6 @@ function createCollage($covers, $quality ,$totalSize, $cols, $rows, $albumInfo)
 			$black = imagecolorallocate($image, 0, 0, 0);		
 			imagettfstroketext($image, 10, 0, 5, 20, $white, $black, $font, $rawdata['artist'], 1);
 			imagettfstroketext($image, 10, 0, 5, 32, $white, $black, $font, $rawdata['album'], 1);
-			imagettfstroketext($image, 10, 0, 5, 44, $white, $black, $font, "test", 1);
 			imagettfstroketext($image, 10, 0, 5, 44, $white, $black, $font, $rawdata['playcount'], 1);
 		}
 
