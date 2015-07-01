@@ -219,7 +219,7 @@ function getArt($albums, $quality)
 		$artUrl[$i]['mbid'] = $album->{'mbid'};
 		$artUrl[$i]['playcount'] = $album->{'playcount'};
 		$artUrl[$i]['url'] = $url;
-		
+		$artUrl[$i]['user'] = $request['user'];
 		try
 		{	
 			$result = $sqs->sendMessage(array(
