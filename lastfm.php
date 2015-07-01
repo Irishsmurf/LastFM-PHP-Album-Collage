@@ -190,6 +190,7 @@ function imagettfstroketext(&$image, $size, $angle, $x, $y, &$textcolor, &$strok
 
 function getArt($albums, $quality)
 {
+	global $request;
 	/*
 	   0 = Low (34)
 	   1 = Medium (64s)
@@ -202,7 +203,6 @@ function getArt($albums, $quality)
 		'credentials.cache' => $cache,
 		'region' => 'eu-west-1'
 	));
-
 
 	foreach($albums as $album)
 	{
