@@ -283,7 +283,7 @@ $plays = isset($playcount) && $playcount == 1;
 $albumInfo = isset($info) && $info == 1;
 
 //Hack to prevent albums with no images
-$limit = $request['cols'] * $request['rows'] + 5;
+$limit = $request['cols'] * $request['rows'] + 15;
 $bucket = $config['bucket'];
 
 if(empty($config['bucket']) && empty($config['api_key']))
