@@ -336,8 +336,8 @@ $covers = getArt($albums, 3);
 $image = createCollage($covers, 3, 0, $cols, $rows, $albumInfo, $plays);
 
 header("Content-Type: image/jpeg");
-imagejpeg($image);
-imagejpeg($image, $filename);
+imagejpeg($image, NULL, 100);
+imagejpeg($image, $filename, 100);
 
 $result = $s3->putObject(array(
       'Bucket' => $bucket,
