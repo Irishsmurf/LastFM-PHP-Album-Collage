@@ -140,7 +140,7 @@ function createCollage($covers, $quality ,$totalSize, $cols, $rows, $albumInfo, 
 		$image = imagecreatefromstring($rawdata['data']);
 		if($albumInfo || $playcount)
 		{
-			$font = "resources/Koruri-Regular.ttf";
+			$font = "resources/NotoSans-Regular.ttf";
 			$white = imagecolorallocate($image, 255, 255, 255);		
 			$black = imagecolorallocate($image, 0, 0, 0);
 			error_log("Playcount State:".$playcount);
