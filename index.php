@@ -13,6 +13,7 @@ if(isset($_SERVER['HTTP_REFERER'])){
 
 <head>
 <meta name="google-site-verification" content="-KVdJ1exOkKJOnzSebdMNGStyc68M8s7p09zpb-Lfk0" />
+<meta property="fb:admins" content="1370840827" />
 <title>Paddez</title>
 <link rel="stylesheet" href="https://static.paddez.com/style.css" type="text/css" media="screen" />
 <link rel="SHORTCUT ICON" href="https://static.paddez.com/images/faviocon.ico">
