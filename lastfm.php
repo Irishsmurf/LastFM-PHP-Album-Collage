@@ -13,6 +13,7 @@
    Version 1.0 = 26/10/2014
    Version 1.1 = 28/10/2014
    Version 1.2 = 10/02/2015
+   Version 1.3 = 18/07/2015
 
    0.5
    Minor Bugfixes
@@ -37,6 +38,10 @@
    1.2
    Album information captions (Artist, Album)
 
+   1.3
+   Hangul & Japense Support
+   Play count included
+   §
  */
 //Grabs the query included in the URL.
 
