@@ -320,7 +320,7 @@ if(isset($infoJson->{"error"}))
 $json = getJson($lastfmApi);
 $jsonhash = md5($json);
 
-$filename = "images/$user.$period.$rows.$cols.$info.$jsonhash";
+$filename = "images/$user.$period.$rows.$cols.$albumInfo.$plays.$jsonhash";
 
 if(file_exists($filename))
 {
