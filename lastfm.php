@@ -58,6 +58,10 @@ use Guzzle\Cache\DoctrineCacheAdapter;
 
 function getJson($url)
 {
+	/*
+		Method for downloading JSON from LastFM using cURL.
+		Must set User-Agent, as per LastFM's API policy.
+	*/
   $curl = curl_init($url);
   curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
   curl_setopt($curl, CURLOPT_USERAGENT, 'www.paddez.com/lastfm/');
@@ -77,8 +81,14 @@ function getJson($url)
 
 function getImages($coverUrls)
 {
+	/*
+		This method uses parallel cURL's to speed up downloads.
+	*/
+	//Create array to hold cURL's
 	$chs = array();
+	//Array for HTTP responses
 	$responses = array();
+	//Boolean to note if the downloads are still progressing.
 	$running = null;
 	$mh = curl_multi_init();
 	$i = 0;
@@ -130,23 +140,28 @@ function createCollage($covers, $quality ,$totalSize, $cols, $rows, $albumInfo, 
 			break;
 	}
 
+	//Create blank image
 	$canvas = imagecreatetruecolor($pixels * $cols, $pixels * $rows);
+	//Set black colour.
 	$backgroundColor = imagecolorallocate($canvas, 255, 255, 255);
+	//Fill with black
 	imagefill($canvas, 0, 0, $backgroundColor);
-
+	//Note where cursor is.
 	$coords['x'] = 0;
 	$coords['y'] = 0;
 
 	$i = 1;
+	//Grab images with cURL method.
 	$images = getImages($covers);
 
+	//For each image returned, create image object and write text
 	foreach($images as $rawdata)
 	{
 		$image = imagecreatefromstring($rawdata['data']);
 		if($albumInfo || $playcount)
 		{
 			$font = "resources/NotoSansCJK-Regular.ttc";
-			$white = imagecolorallocate($image, 255, 255, 255);		
+			$white = imagecolorallocate($image, 255, 255, 255);
 			$black = imagecolorallocate($image, 0, 0, 0);
 			error_log("Playcount State:".$playcount);
 			if($albumInfo && $playcount)
@@ -168,8 +183,10 @@ function createCollage($covers, $quality ,$totalSize, $cols, $rows, $albumInfo, 
 
 		imagecopy($canvas, $image, $coords['x'], $coords['y'], 0, 0, $pixels, $pixels);
 
+		//Increase X coords each time
 		$coords['x'] += $pixels;
 
+		//If we've hit the side of the image, move down and reset x position.
 		if($i % $cols == 0)
 		{
 			$coords['y'] += 300;
@@ -182,8 +199,11 @@ function createCollage($covers, $quality ,$totalSize, $cols, $rows, $albumInfo, 
 	return $canvas;
 }
 
-function imagettfstroketext(&$image, $size, $angle, $x, $y, &$textcolor, &$strokecolor, $fontfile, $text, $px) {
-
+function imagettfstroketext(&$image, $size, $angle, $x, $y, &$textcolor, &$strokecolor, $fontfile, $text, $px)
+{
+	/*
+		Function to add shadow to text.
+	*/
   for($c1 = ($x-abs($px)); $c1 <= ($x+abs($px)); $c1++)
     for($c2 = ($y-abs($px)); $c2 <= ($y+abs($px)); $c2++)
       $bg = imagettftext($image, $size, $angle, $c1, $c2, $strokecolor, $fontfile, $text);
@@ -204,6 +224,7 @@ function getArt($albums, $quality)
 	 */
 	$i = 0;
 	$artUrl = null;
+	//Create SQS Client to send Messages to be consumed and stored in DB.
 	$sqs = SqsClient::factory(array(
 		'credentials.cache' => $cache,
 		'region' => 'eu-west-1'
@@ -213,12 +234,12 @@ function getArt($albums, $quality)
 	{
 		$url = $album->{'image'}[$quality]->{'#text'};
 
-		if(strpos($url, 'noimage') != false) 
+		if(strpos($url, 'noimage') != false)
 		{
 			error_log('No album art for - '.$album->{'artist'}->{'name'}.' - '.$album->{'name'});
 			continue;
 		}
-	
+
 		$artUrl[$i]['artist'] = $album->{'artist'}->{'name'};
 		$artUrl[$i]['album'] = $album->{'name'};
 		$artUrl[$i]['mbid'] = $album->{'mbid'};
@@ -226,7 +247,7 @@ function getArt($albums, $quality)
 		$artUrl[$i]['url'] = $url;
 		$artUrl[$i]['user'] = $request['user'];
 		try
-		{	
+		{
 			$result = $sqs->sendMessage(array(
 				'QueueUrl' => 'https://sqs.eu-west-1.amazonaws.com/346795263809/lastfm-albums',
 				'MessageBody' => json_encode($artUrl[$i])
@@ -269,12 +290,13 @@ if(!isset($config))
   $config['api_key'] = getenv("api_key");
 }
 
+//Cache AWS's temporary role credentials
 $cache = new DoctrineCacheAdapter(new FilesystemCache('/tmp/cache'));
 $s3 = S3Client::factory(array(
       'credentials.cache' => $cache,
       'region' => 'eu-west-1'));
 
-
+//Get localhost
 $url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 $url = substr($url, strpos($url, '?')+1);
 
@@ -291,19 +313,23 @@ $albumInfo = isset($info) && $info == 1;
 $limit = $request['cols'] * $request['rows'] + 15;
 $bucket = $config['bucket'];
 
+//If Configuration isn't defined, throw and error and exit
 if(empty($config['bucket']) && empty($config['api_key']))
 {
   error_log("Configuration not defined, check environment variables or config.inc.php");
   die();
 }
-
+//S3 Key.
 $key = 'images/'.$request['user'].'-'.$request['period'].'.jpg';
 
+//Define Lastfm API calls
 $lastfmApi = "http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=".$request['user']."&period=".$request['period']."&api_key=".$config['api_key']."&limit=$limit&format=json";
 $validUser = "http://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=".$request['user']."&api_key=".$config['api_key']."&format=json";
 
+//Check if a valid user
 $infoJson = json_decode(getJson($validUser));
 
+//If an error is thrown, generate an error image and exit
 if(isset($infoJson->{"error"}))
 {
   header("Content-Type: image/png");
@@ -317,16 +343,17 @@ if(isset($infoJson->{"error"}))
         'Message' => $infoJson->{"message"}." - ".$request['user'],
         'Subject' => "Lastfm Error: ".$infoJson->{"error"}
         ));
-
   return;
 }
 
-
+//Get User's albums and generate a MD5 hash based on this
 $json = getJson($lastfmApi);
 $jsonhash = md5($json);
 
+//Cache based on user set variables and JSON hash
 $filename = "images/$user.$period.$rows.$cols.$albumInfo.$plays.$jsonhash";
 
+//if a previous file exists - request is cached, serve from cache and exit
 if(file_exists($filename))
 {
   header("Content-Type: image/jpeg");
@@ -335,15 +362,21 @@ if(file_exists($filename))
   exit;
 }
 
+//otherwise carry on and getAlbums from LastFM.
 $albums = getAlbums(json_decode($json));
+//Pass the Albums to getArt to download the art into a $covers array
 $covers = getArt($albums, 3);
 
+//From the covers array, create a collage while passing user variables required
 $image = createCollage($covers, 3, 0, $cols, $rows, $albumInfo, $plays);
-
+//Output HTTP ContentType header.
 header("Content-Type: image/jpeg");
+//Output image on stdout.
 imagejpeg($image, NULL, 100);
+//Save image to local filesystem as cache
 imagejpeg($image, $filename, 100);
 
+//After output, save image to S3 for static content
 $result = $s3->putObject(array(
       'Bucket' => $bucket,
       'Key'   => strtolower($key),
@@ -352,5 +385,6 @@ $result = $s3->putObject(array(
       'ContentType' => 'image/jpeg'
       ));
 
+//Free resources
 imagedestroy($image);
 ?>
