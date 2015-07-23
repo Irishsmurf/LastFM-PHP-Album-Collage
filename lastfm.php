@@ -68,11 +68,14 @@ function getJson($url)
   curl_setopt($curl, CURLOPT_FAILONERROR, true);
   $response = curl_exec($curl);
 
-  if($response == false || curl_errno($response))
+  if($response == false || curl_errno($curl))
   {
-    $info = curl_getinfo($curl);
-    curl_close($curl);
-    die('Error: '.var_export($info));
+  	$info = curl_getinfo($curl);
+  	curl_close($curl);
+	imagepng(errorImage(curl_error($curl)));
+	error_log("Error: ".curl_error($curl));
+  	die('Error: '.curl_error($curl));
+
   }
 
   curl_close($curl);
@@ -163,7 +166,6 @@ function createCollage($covers, $quality ,$totalSize, $cols, $rows, $albumInfo, 
 			$font = "resources/NotoSansCJK-Regular.ttc";
 			$white = imagecolorallocate($image, 255, 255, 255);
 			$black = imagecolorallocate($image, 0, 0, 0);
-			error_log("Playcount State:".$playcount);
 			if($albumInfo && $playcount)
 			{
 				imagettfstroketext($image, 10, 0, 5, 20, $white, $black, $font, $rawdata['artist'], 1);
