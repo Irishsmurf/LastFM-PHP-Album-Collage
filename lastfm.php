@@ -378,11 +378,12 @@ imagejpeg($image, $filename, 100);
 
 //After output, save image to S3 for static content
 $result = $s3->putObject(array(
-      'Bucket' => $bucket,
-      'Key'   => strtolower($key),
-      'SourceFile' => $filename,
-      'ACL'   => 'public-read',
-      'ContentType' => 'image/jpeg'
+      'Bucket'			=> $bucket,
+      'Key'				=> strtolower($key),
+      'SourceFile'		=> $filename,
+      'ACL'				=> 'public-read',
+      'ContentType'		=> 'image/jpeg',
+	  'CacheControl'	=>	'max-age=16400'
       ));
 
 //Free resources
