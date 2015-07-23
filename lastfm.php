@@ -160,6 +160,7 @@ function createCollage($covers, $quality ,$totalSize, $cols, $rows, $albumInfo, 
 	//For each image returned, create image object and write text
 	foreach($images as $rawdata)
 	{
+		error_log("Album Processing: ".$rawdata['artist']." - ".$rawdata['album']);
 		$image = imagecreatefromstring($rawdata['data']);
 		if($albumInfo || $playcount)
 		{
