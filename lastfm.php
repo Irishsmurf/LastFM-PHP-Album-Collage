@@ -146,7 +146,7 @@ function createCollage($covers, $quality ,$totalSize, $cols, $rows, $albumInfo, 
 	//Create blank image
 	$canvas = imagecreatetruecolor($pixels * $cols, $pixels * $rows);
 	//Set black colour.
-	$backgroundColor = imagecolorallocate($canvas, 255, 255, 255);
+	$backgroundColor = imagecolorallocate($canvas, 0, 0, 0);
 	//Fill with black
 	imagefill($canvas, 0, 0, $backgroundColor);
 	//Note where cursor is.
