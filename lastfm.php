@@ -56,6 +56,8 @@ use Aws\Sqs\SqsClient;
 use Doctrine\Common\Cache\FilesystemCache;
 use Guzzle\Cache\DoctrineCacheAdapter;
 
+mb_internal_encoding("UTF-8");
+
 function getJson($url)
 {
 	/*
