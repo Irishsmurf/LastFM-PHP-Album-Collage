@@ -89,7 +89,7 @@ if(!empty($_POST)){
 <select name="len">
 <option value="3" selected>3</option>
 <?php
-for($x=4; $x<=15; $x++){
+for($x=4; $x<=13; $x++){
 	echo "<option value=\"$x\">$x</option>\n";
 }
 ?>
@@ -100,7 +100,7 @@ for($x=4; $x<=15; $x++){
 <select name="width">
 <option value="3" selected>3</option>
 <?php
-for($x=4; $x<=15; $x++){
+for($x=4; $x<=13; $x++){
 	echo "<option value=\"$x\">$x</option>\n";
 }
 ?>
@@ -153,7 +153,8 @@ for($x=4; $x<=15; $x++){
 <h3>About</h3>
 </header>
 <p>Create an album collage from your Last.fm scrobbles</p>
-<p>Now with Hangul & Japanese Support (/^▽^)/</p>
+<p>Now with Hangul & Japanese Support (/^▽^)/<br />LastFM no longer allows more
+than 200 results :(, 13 is the maximum for now</p>
 <p>If you run into any issues - shout at me [dave@paddez.com].</p>
 <p>PS: Hi /mu/ <3 </p>
 </section>
