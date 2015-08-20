@@ -1,47 +1,48 @@
 <?php
 /*
 
-   Last.fm Album Collage
-   Runs on Elastic Beanstalk
+    Last.fm Album Collage
+    Runs on Elastic Beanstalk
 
-   David Kernan
+    David Kernan
 
-   Version 0.5 = 26/06/2010
-   Version 0.6 = 17/9/2010
-   Version 0.7 = 10/6/2011
-   Version 0.9 = 02/8/2011
-   Version 1.0 = 26/10/2014
-   Version 1.1 = 28/10/2014
-   Version 1.2 = 10/02/2015
-   Version 1.3 = 18/07/2015
+    Version 0.5 = 26/06/2010
+    Version 0.6 = 17/9/2010
+    Version 0.7 = 10/6/2011
+    Version 0.9 = 02/8/2011
+    Version 1.0 = 26/10/2014
+    Version 1.1 = 28/10/2014
+    Version 1.2 = 10/02/2015
+    Version 1.3 = 18/07/2015
+    Version 1.5 = 20/08/2015
 
-   0.5
-   Minor Bugfixes
+    0.5
+        Minor Bugfixes
 
-   0.6
-   Invalid Headers being sent, corrected.
-   Cache timeout increased to 10 minutes.
-   0.7
-   Removed invalid images showing up in Result, will now only show the albums tha have a cover art in the Last.fm database
-   0.9
-   Updated Webpage to include loading
-   Included Higher Definition Collages
+    0.6
+        Invalid Headers being sent, corrected.
+        Cache timeout increased to 10 minutes.
+    0.7
+        Removed invalid images showing up in Result, will now only show the albums tha have a cover art in the Last.fm database
+    0.9
+        Updated Webpage to include loading
+        Included Higher Definition Collages
 
-   1.0
-   Elastic Beanstalk Support
-   Amazon S3 Support
-   Total code refiguration to make a bit more sense
+    1.0
+        Elastic Beanstalk Support
+        Amazon S3 Support
+        Total code refiguration to make a bit more sense
 
-   1.1
-   Implemented Composer for managing dependancies.
+    1.1
+        Implemented Composer for managing dependancies.
 
-   1.2
-   Album information captions (Artist, Album)
+    1.2
+        Album information captions (Artist, Album)
 
-   1.3
-   Hangul & Japense Support
-   Play count included
-   §
+    1.3
+        Hangul & Japanese Support
+        Play count included
+    
  */
 //Grabs the query included in the URL.
 
