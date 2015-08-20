@@ -240,10 +240,10 @@ function getArt($albums, $quality)
 	{
 		$url = $album->{'image'}[$quality]->{'#text'};
 
-		if(strpos($url, 'noimage') != false)
+		if(strpos($url, 'noimage') != false || strlen($url) < 5)
 		{
 			error_log('No album art for - '.$album->{'artist'}->{'name'}.' - '.$album->{'name'});
-			continue;
+            $url = 'http://lastfm.paddez.com/resources/blank.jpg';
 		}
 
 		$artUrl[$i]['artist'] = $album->{'artist'}->{'name'};
