@@ -315,8 +315,7 @@ $request['rows'] = $rows;
 $plays = isset($playcount) && $playcount == 1;
 $albumInfo = isset($info) && $info == 1;
 
-//Hack to prevent albums with no images
-$limit = $request['cols'] * $request['rows'] + 15;
+$limit = $request['cols'] * $request['rows'];
 $bucket = $config['bucket'];
 
 //If Configuration isn't defined, throw and error and exit
