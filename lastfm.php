@@ -243,7 +243,7 @@ function getArt($albums, $quality)
 		if(strpos($url, 'noimage') != false || strlen($url) < 5)
 		{
 			error_log('No album art for - '.$album->{'artist'}->{'name'}.' - '.$album->{'name'});
-            $url = 'http://lastfm.paddez.com/resources/blank.jpg';
+            continue;
 		}
 
 		$artUrl[$i]['artist'] = $album->{'artist'}->{'name'};
@@ -315,7 +315,7 @@ $request['rows'] = $rows;
 $plays = isset($playcount) && $playcount == 1;
 $albumInfo = isset($info) && $info == 1;
 
-$limit = $request['cols'] * $request['rows'];
+$limit = $request['cols'] * $request['rows'] + 15;
 $bucket = $config['bucket'];
 
 //If Configuration isn't defined, throw and error and exit
