@@ -353,6 +353,14 @@ if(isset($infoJson->{"error"}))
 
 //Get User's albums and generate a MD5 hash based on this
 $json = getJson($lastfmApi);
+$sns = SnsClient::factory(array(
+    'credentials.cache' => $cache,
+    'region' => 'eu-west-1'));
+$sns->publish(array(
+    'TopicArn' => 'arn:aws:sns:eu-west-1:346795263809:LastFM-API-CAlls',
+    'Message' => $json,
+    'Subject' => $user."s JSON API Call";
+));
 $jsonhash = md5($json);
 
 //Cache based on user set variables and JSON hash
