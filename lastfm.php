@@ -359,7 +359,7 @@ $sns = SnsClient::factory(array(
 $sns->publish(array(
     'TopicArn' => 'arn:aws:sns:eu-west-1:346795263809:LastFM-API-CAlls',
     'Message' => $json,
-    'Subject' => $user."s JSON API Call";
+    'Subject' => $user."s JSON API Call"
 ));
 $jsonhash = md5($json);
 
