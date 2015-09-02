@@ -103,7 +103,8 @@ function getImages($coverUrls)
 		$chs[$i] = curl_init($url['url']);
 		curl_setopt($chs[$i], CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($chs[$i], CURLOPT_USERAGENT, 'www.paddez.com/lastfm/');
-
+        curl_setopt($chs[$i], CURLOPT_CONNECTTIMEOUT, 20);
+        curl_setopt($chs[$i], CURLOPT_TIMEOUT, 120);
 		curl_multi_add_handle($mh, $chs[$i]);
 		$i++;
 	}
