@@ -36,7 +36,9 @@ img{
 </style>
 </head>
 <body>
-<a href="https://github.com/Irishsmurf/LastFM-PHP-Album-Collage"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 5;" src="https://static.paddez.com/resources/github-banner.png" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+<a href="https://github.com/Irishsmurf/LastFM-PHP-Album-Collage"><img
+style="position: absolute; top: 0; right: 0; border: 0; z-index: 5;"
+src="https://static.paddez.com/misc/github-banner.png" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
 <div class="topbanner">
 <h1>~/paddez/projects/lastfm</h1>
 </div>
