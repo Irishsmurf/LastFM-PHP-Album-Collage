@@ -8,4 +8,4 @@ php:
   - nightly
 
 before_script: composer install
-script: phpunit tests/lastfm_test.php
+script: phpunit tests/LastFmTest.php
