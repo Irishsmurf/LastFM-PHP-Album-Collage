@@ -1,5 +1,7 @@
 # LastFM PHP Album Collage
 ![Build Status](https://travis-ci.org/Irishsmurf/LastFM-PHP-Album-Collage.svg?branch=AddingTests)
+
+
 A Script that takes in `LastFM username` and collages their most played albums in a grid.
 Uses S3 to store the images in a persistant manner without filling up the local disk.
 
