@@ -71,9 +71,9 @@ class LastFmTest extends PHPUnit_Framework_TestCase {
          ->willReturn('503');
 
     $this->setExpectedException(
-         'CurlException', 'Error: Response'
+         'CurlException', 'Error: 503'
     );
-    $result = $this->utils->getJson("some.api.com", $curl);
+    $result = $this->utils->getJson("some.api.com", $curl, true);
   }
 
   public function testGetAlbumsValid() {

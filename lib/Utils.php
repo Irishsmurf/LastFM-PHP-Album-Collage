@@ -13,7 +13,7 @@ class CurlException extends Exception{
 }
 
 class Utils {
-  public static function getJson($url, $curl)
+  public static function getJson($url, $curl, $test=false)
   {
     /*
       Method for downloading JSON from LastFM using cURL.
@@ -26,11 +26,10 @@ class Utils {
 
     if($response == false || $curl->getStatusCode() != 200)
     {
-      echo $response;
-      echo $curl->getStatusCode();
       $info = curl_getinfo($curl->ch);
-      imagepng(Utils::errorImage("Hello"));
-      throw new CurlException('Error: Response');
+      if(!$test)
+        imagepng(Utils::errorImage($curl->getStatusCode()));
+      throw new CurlException('Error: '.$curl->getStatusCode());
     }
     return ($response);
   }
