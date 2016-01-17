@@ -1,6 +1,6 @@
 <?php
 
-require_once '../lib/Utils.php';
+require_once 'lib/Utils.php';
 
 class StubCurl extends Curl {
   public function _contruct() {
