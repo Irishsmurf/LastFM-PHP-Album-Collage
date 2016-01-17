@@ -1,5 +1,7 @@
 # LastFM PHP Album Collage
 ![Build Status](https://travis-ci.org/Irishsmurf/LastFM-PHP-Album-Collage.svg?branch=AddingTests)
+[![Code Climate](https://codeclimate.com/github/Irishsmurf/LastFM-PHP-Album-Collage/badges/gpa.svg)](https://codeclimate.com/github/Irishsmurf/LastFM-PHP-Album-Collage)
+[![Issue Count](https://codeclimate.com/github/Irishsmurf/LastFM-PHP-Album-Collage/badges/issue_count.svg)](https://codeclimate.com/github/Irishsmurf/LastFM-PHP-Album-Collage)
 
 
 A Script that takes in `LastFM username` and collages their most played albums in a grid.
