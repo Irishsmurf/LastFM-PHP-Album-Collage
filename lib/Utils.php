@@ -118,7 +118,7 @@ class Utils {
       $image = imagecreatefromstring($rawdata['data']);
       if($albumInfo || $playcount)
       {
-        $font = "resources/NotoSansCJK-Regular.ttc";
+        $font = "../resources/NotoSansCJK-Regular.ttc";
         $white = imagecolorallocate($image, 255, 255, 255);
         $black = imagecolorallocate($image, 0, 0, 0);
         if($albumInfo && $playcount)
@@ -218,16 +218,20 @@ class Utils {
     return $artUrl;
   }
 
-  function getAlbums($json)
+  static function getAlbums($json)
   {
-    return $json->{'topalbums'}->{'album'};
+    if(is_object($json->{'topalbums'}))
+      return $json->{'topalbums'}->{'album'};
+    else {
+      return null;
+    }
   }
 
   static function errorImage($message)
   {
     $x = 500;
     $y = 50;
-    $font = "../resources/OpenSans-Regular.ttf";
+    $font = "resources/OpenSans-Regular.ttf";
 
     $image = imagecreatetruecolor($x, $y);
     $background = imagecolorallocate($image, 0xF0, 0xF0, 0xF0);

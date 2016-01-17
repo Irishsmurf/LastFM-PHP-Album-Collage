@@ -76,6 +76,19 @@ class LastFmTest extends PHPUnit_Framework_TestCase {
     $result = $this->utils->getJson("some.api.com", $curl);
   }
 
+  public function testGetAlbumsValid() {
+    $json_example = json_decode('{"topalbums": {
+                      "album": "hello"}}');
+    $album = Utils::getAlbums($json_example);
+
+    $this->assertEquals($album, "hello");
+  }
+
+  public function testGetAlbumsInvalid() {
+    $json_example = json_decode('{"topalbums": 0}');
+    $album = Utils::getAlbums($json_example);
+    $this->assertEquals($album, null);
+  }
 }
 
 ?>
