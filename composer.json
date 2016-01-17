@@ -1,11 +1,13 @@
 {
-	"require": {
-		"ext-gd": "*",
-			"aws/aws-sdk-php": "2.*",
-			"monolog/monolog": "~1.1",
-			"doctrine/orm": "*"
-	},
-		"require-dev": {
-			"heroku/heroku-buildpack-php":"*"
-		}
+  "require": {
+    "ext-gd": "*",
+    "aws/aws-sdk-php": "2.*",
+    "monolog/monolog": "~1.1",
+    "doctrine/orm": "*",
+    "phpunit/php-code-coverage": "^3"
+  },
+  "require-dev": {
+    "heroku/heroku-buildpack-php":"*",
+		"codeclimate/php-test-reporter": "dev-master"
+  }
 }
