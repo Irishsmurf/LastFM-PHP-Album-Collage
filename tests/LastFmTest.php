@@ -95,6 +95,13 @@ class LastFmTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals(500, imagesx($image));
     $this->assertEquals(50, imagesy($image));
   }
+
+  public function testGetImagesInvalid() {
+    $images = $this->utils->getImages(array());
+    $this->assertEmpty($images);
+
+  }
+
 }
 
 ?>

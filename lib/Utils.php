@@ -52,8 +52,8 @@ class Utils {
       $chs[$i] = curl_init($url['url']);
       curl_setopt($chs[$i], CURLOPT_RETURNTRANSFER, true);
       curl_setopt($chs[$i], CURLOPT_USERAGENT, 'www.paddez.com/lastfm/');
-          curl_setopt($chs[$i], CURLOPT_CONNECTTIMEOUT, 20);
-          curl_setopt($chs[$i], CURLOPT_TIMEOUT, 120);
+      curl_setopt($chs[$i], CURLOPT_CONNECTTIMEOUT, 20);
+      curl_setopt($chs[$i], CURLOPT_TIMEOUT, 120);
       curl_multi_add_handle($mh, $chs[$i]);
       $i++;
     }
@@ -64,6 +64,7 @@ class Utils {
     } while($running > 0);
 
     $i = 0;
+    $images = array();
     foreach($chs as $ch)
     {
       $images[$i]['data'] = curl_multi_getcontent($ch);
