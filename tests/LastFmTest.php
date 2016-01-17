@@ -89,6 +89,12 @@ class LastFmTest extends PHPUnit_Framework_TestCase {
     $album = Utils::getAlbums($json_example);
     $this->assertEquals($album, null);
   }
+
+  public function testErrorImageValid() {
+    $image = Utils::errorImage("some message");
+    $this->assertEquals(500, imagesx($image));
+    $this->assertEquals(50, imagesy($image));
+  }
 }
 
 ?>
