@@ -8,7 +8,7 @@ php:
   - nightly
 
 before_script: composer install
-script: phpunit --coverage-clover build/logs/clover.xml tests/LastFmTest.php --tap --whitelist lastfm.php --whitelist lib/Utils.php --whitelist lib/curl.php   
+script: phpunit --coverage-clover build/logs/clover.xml tests/LastFmTest.php --tap
 addons:
     code_climate:
         repo_token: 5717155e65136d205680957455ca51641afa257ec2481d4adba65c271dee25d0
