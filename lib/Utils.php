@@ -167,8 +167,8 @@ class Utils {
 
     return imagettftext($image, $size, $angle, $x, $y, $textcolor, $fontfile, $text);
   }
-  //Tested
-  function getArt($albums, $quality)
+  //(TODO)
+  function getArt($albums, $quality, $debug = false)
   {
     global $request;
     /*
@@ -180,10 +180,12 @@ class Utils {
     $i = 0;
     $artUrl = null;
     //Create SQS Client to send Messages to be consumed and stored in DB.
-    $sqs = SqsClient::factory(array(
-      'credentials.cache' => $cache,
-      'region' => 'eu-west-1'
-    ));
+    if(!$debug) {
+      $sqs = SqsClient::factory(array(
+        'credentials.cache' => $cache,
+        'region' => 'eu-west-1'
+      ));
+    }
 
     foreach($albums as $album)
     {
@@ -192,7 +194,7 @@ class Utils {
       if(strpos($url, 'noimage') != false || strlen($url) < 5)
       {
         error_log('No album art for - '.$album->{'artist'}->{'name'}.' - '.$album->{'name'});
-              continue;
+        continue;
       }
 
       $artUrl[$i]['artist'] = $album->{'artist'}->{'name'};
@@ -201,16 +203,17 @@ class Utils {
       $artUrl[$i]['playcount'] = $album->{'playcount'};
       $artUrl[$i]['url'] = $url;
       $artUrl[$i]['user'] = $request['user'];
-      try
-      {
-        $result = $sqs->sendMessage(array(
-          'QueueUrl' => 'https://sqs.eu-west-1.amazonaws.com/346795263809/lastfm-albums',
-          'MessageBody' => json_encode($artUrl[$i])
-        ));
-      }
-      catch(Exception $e)
-      {
-        error_log("SQS Error = ".$artUrl[$i]);
+      if(!$debug){
+        try {
+          $result = $sqs->sendMessage(array(
+            'QueueUrl' => 'https://sqs.eu-west-1.amazonaws.com/346795263809/lastfm-albums',
+            'MessageBody' => json_encode($artUrl[$i])
+          ));
+        }
+        catch(Exception $e)
+        {
+          error_log("SQS Error = ".$artUrl[$i]);
+        }
       }
       $i++;
     }

@@ -73,7 +73,12 @@ class LastFmTest extends PHPUnit_Framework_TestCase {
     $this->setExpectedException(
          'CurlException', 'Error: 503'
     );
-    $result = $this->utils->getJson("some.api.com", $curl, true);
+    try {
+      $result = $this->utils->getJson("some.api.com", $curl, true);
+    } catch(Exception $e) {
+      echo $e;
+      throw $e;
+    }
   }
 
   public function testGetAlbumsValid() {
@@ -100,6 +105,37 @@ class LastFmTest extends PHPUnit_Framework_TestCase {
     $images = $this->utils->getImages(array());
     $this->assertEmpty($images);
 
+  }
+
+  public function testGetArtValid() {
+    $json = '[{"name":"AlbumName",
+        "playcount":"1000","mbid":"c9294302-9589-4859-a0ed-d82c65b017db",
+        "url":"http://www.website.com/some+url/",
+        "artist":{"name":"ArtistName","mbid":"edcea99a-630e-4567-a5b8-21b4c4a01ae2",
+        "url":"http://www.last.fm/music/Brand+New"},"image":[
+        {"#text":"ttp://www.website.com/some+url/small","size":"small"},
+        {"#text":"ttp://www.website.com/some+url/medium","size":"medium"},
+        {"#text":"ttp://www.website.com/some+url/large","size":"large"},
+        {"#text":"http://www.website.com/some+url/xlarge","size":"extralarge"}],
+        "@attr":{"rank":"1"}}]';
+    $returned_array = $this->utils->getArt(json_decode($json), 3, true);
+    $this->assertEquals($returned_array[0]['artist'], 'ArtistName');
+    $this->assertEquals($returned_array[0]['album'], 'AlbumName');
+    $this->assertEquals($returned_array[0]['mbid'], 'c9294302-9589-4859-a0ed-d82c65b017db');
+    $this->assertEquals($returned_array[0]['playcount'], '1000');
+    $this->assertEquals($returned_array[0]['url'], 'http://www.website.com/some+url/xlarge');
+  }
+
+  public function testGetArtInvalid() {
+    $json = '[{"name":"AlbumName",
+        "playcount":"1000","mbid":"c9294302-9589-4859-a0ed-d82c65b017db",
+        "url":"http://www.website.com/some+url/",
+        "artist":{"name":"ArtistName","mbid":"edcea99a-630e-4567-a5b8-21b4c4a01ae2",
+        "url":"http://www.last.fm/music/Brand+New"},"image":[
+        {"#text":"noimage","size":"small"}],
+        "@attr":{"rank":"1"}}]';
+    $returned_array = $this->utils->getArt(json_decode($json), 0, true);
+    $this->assertNotEmpty($returned_array);
   }
 
 }
