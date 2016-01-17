@@ -33,7 +33,7 @@ class Utils {
     }
     return ($response);
   }
-
+  //Tested
   function getImages($coverUrls)
   {
     /*
@@ -166,7 +166,7 @@ class Utils {
 
     return imagettftext($image, $size, $angle, $x, $y, $textcolor, $fontfile, $text);
   }
-
+  //Tested
   function getArt($albums, $quality)
   {
     global $request;
@@ -226,6 +226,7 @@ class Utils {
     }
   }
 
+  //Tested
   static function errorImage($message)
   {
     $x = 500;
