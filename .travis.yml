@@ -9,3 +9,6 @@ php:
 
 before_script: composer install
 script: phpunit tests/LastFmTest.php --verbose --colors=auto --tap
+addons:
+    code_climate:
+        repo_token: 5717155e65136d205680957455ca51641afa257ec2481d4adba65c271dee25d0
