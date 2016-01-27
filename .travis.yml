@@ -9,3 +9,5 @@ script: phpunit --coverage-clover build/logs/clover.xml tests/LastFmTest.php --t
 addons:
     code_climate:
         repo_token: 5717155e65136d205680957455ca51641afa257ec2481d4adba65c271dee25d0
+notifications:
+  slack: paddez:YL8ClQ8EqGYKutxNAEguOguu
