@@ -118,7 +118,7 @@ class LastFmTest extends PHPUnit_Framework_TestCase {
         {"#text":"ttp://www.website.com/some+url/large","size":"large"},
         {"#text":"http://www.website.com/some+url/xlarge","size":"extralarge"}],
         "@attr":{"rank":"1"}}]';
-    $returned_array = $this->utils->getArt(json_decode($json), 3, true);
+    $returned_array = $this->utils->getArt(json_decode($json), 3);
     $this->assertEquals($returned_array[0]['artist'], 'ArtistName');
     $this->assertEquals($returned_array[0]['album'], 'AlbumName');
     $this->assertEquals($returned_array[0]['mbid'], 'c9294302-9589-4859-a0ed-d82c65b017db');

@@ -165,7 +165,7 @@ class Utils {
     return imagettftext($image, $size, $angle, $x, $y, $textcolor, $fontfile, $text);
   }
 
-  function getArt($albums, $quality, $debug = false)
+  function getArt($albums, $quality)
   {
     global $request;
     /*
@@ -176,13 +176,6 @@ class Utils {
      */
     $i = 0;
     $artUrl = null;
-    //Create SQS Client to send Messages to be consumed and stored in DB.
-    if(!$debug) {
-      $sqs = SqsClient::factory(array(
-        'credentials.cache' => $cache,
-        'region' => 'eu-west-1'
-      ));
-    }
 
     foreach($albums as $album)
     {
@@ -200,18 +193,6 @@ class Utils {
       $artUrl[$i]['playcount'] = $album->{'playcount'};
       $artUrl[$i]['url'] = $url;
       $artUrl[$i]['user'] = $request['user'];
-      if(!$debug){
-        try {
-          $result = $sqs->sendMessage(array(
-            'QueueUrl' => 'https://sqs.eu-west-1.amazonaws.com/346795263809/lastfm-albums',
-            'MessageBody' => json_encode($artUrl[$i])
-          ));
-        }
-        catch(Exception $e)
-        {
-          error_log("SQS Error = ".$artUrl[$i]);
-        }
-      }
       $i++;
     }
 
