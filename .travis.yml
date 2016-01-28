@@ -11,3 +11,5 @@ addons:
         repo_token: 5717155e65136d205680957455ca51641afa257ec2481d4adba65c271dee25d0
 notifications:
   slack: paddez:YL8ClQ8EqGYKutxNAEguOguu
+after_script:
+  - vendor/bin/test-reporter
