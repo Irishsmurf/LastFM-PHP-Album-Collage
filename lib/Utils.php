@@ -26,7 +26,6 @@ class Utils {
 
     if($response == false || $curl->getStatusCode() != 200)
     {
-      $info = curl_getinfo($curl->ch);
       if(!$test)
         imagepng(Utils::errorImage($curl->getStatusCode()));
       throw new CurlException('Error: '.$curl->getStatusCode());
@@ -41,11 +40,9 @@ class Utils {
     */
     //Create array to hold cURL's
     $chs = array();
-    //Array for HTTP responses
-    $responses = array();
     //Boolean to note if the downloads are still progressing.
     $running = null;
-    $mh = curl_multi_init();
+    $mhandler = curl_multi_init();
     $i = 0;
     foreach($coverUrls as $url)
     {
@@ -54,13 +51,13 @@ class Utils {
       curl_setopt($chs[$i], CURLOPT_USERAGENT, 'www.paddez.com/lastfm/');
       curl_setopt($chs[$i], CURLOPT_CONNECTTIMEOUT, 20);
       curl_setopt($chs[$i], CURLOPT_TIMEOUT, 120);
-      curl_multi_add_handle($mh, $chs[$i]);
+      curl_multi_add_handle($mhandler, $chs[$i]);
       $i++;
     }
     do
     {
-      curl_multi_exec($mh, $running);
-      curl_multi_select($mh);
+      curl_multi_exec($mhandler, $running);
+      curl_multi_select($mhandler);
     } while($running > 0);
 
     $i = 0;
@@ -71,11 +68,11 @@ class Utils {
       $images[$i]['artist'] = $coverUrls[$i]['artist'];
       $images[$i]['album'] = $coverUrls[$i]['album'];
       $images[$i]['playcount'] = $coverUrls[$i]['playcount'];
-      curl_multi_remove_handle($mh, $ch);
+      curl_multi_remove_handle($mhandler, $ch);
       $i++;
     }
 
-    curl_multi_close($mh);
+    curl_multi_close($mhandler);
     return $images;
   }
 
@@ -167,7 +164,7 @@ class Utils {
 
     return imagettftext($image, $size, $angle, $x, $y, $textcolor, $fontfile, $text);
   }
-  //(TODO)
+
   function getArt($albums, $quality, $debug = false)
   {
     global $request;
@@ -225,19 +222,16 @@ class Utils {
   {
     if(is_object($json->{'topalbums'}))
       return $json->{'topalbums'}->{'album'};
-    else {
-      return null;
-    }
+    return null;
   }
 
-  //Tested
   static function errorImage($message)
   {
-    $x = 500;
-    $y = 50;
+    $xSize = 500;
+    $ySize = 50;
     $font = "resources/OpenSans-Regular.ttf";
 
-    $image = imagecreatetruecolor($x, $y);
+    $image = imagecreatetruecolor($xSize, $ySize);
     $background = imagecolorallocate($image, 0xF0, 0xF0, 0xF0);
     $foreground = imagecolorallocate($image, 0x00, 0x00, 0x00);
     imagefill($image, 0, 0, $background);
