@@ -65,9 +65,7 @@ class Utils {
     foreach($chs as $ch)
     {
       $images[$i]['data'] = curl_multi_getcontent($ch);
-      $images[$i]['artist'] = $coverUrls[$i]['artist'];
-      $images[$i]['album'] = $coverUrls[$i]['album'];
-      $images[$i]['playcount'] = $coverUrls[$i]['playcount'];
+      $images[$i] = $coverUrls[$i];
       curl_multi_remove_handle($mhandler, $ch);
       $i++;
     }
