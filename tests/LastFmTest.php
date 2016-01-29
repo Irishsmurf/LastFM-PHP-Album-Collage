@@ -107,6 +107,21 @@ class LastFmTest extends PHPUnit_Framework_TestCase {
 
   }
 
+  public function testGetArtNoAlbumCover() {
+    $json = '[{"name":"AlbumName",
+        "playcount":"1000","mbid":"c9294302-9589-4859-a0ed-d82c65b017db",
+        "url":"http://www.website.com/some+url/",
+        "artist":{"name":"ArtistName","mbid":"edcea99a-630e-4567-a5b8-21b4c4a01ae2",
+        "url":"http://www.last.fm/music/Brand+New"},"image":[
+        {"#text":"ttp://www.website.com/noimage/small","size":"small"},
+        {"#text":"ttp://www.website.com/noimage/medium","size":"medium"},
+        {"#text":"ttp://www.website.com/noimage/large","size":"large"},
+        {"#text":"http://www.website.com/noimage/xlarge","size":"extralarge"}],
+        "@attr":{"rank":"1"}}]';
+    $returned_array = $this->utils->getArt(json_decode($json), 3);
+    $this->assertNull($returned_array);
+  }
+
   public function testGetArtValid() {
     $json = '[{"name":"AlbumName",
         "playcount":"1000","mbid":"c9294302-9589-4859-a0ed-d82c65b017db",
@@ -136,6 +151,18 @@ class LastFmTest extends PHPUnit_Framework_TestCase {
         "@attr":{"rank":"1"}}]';
     $returned_array = $this->utils->getArt(json_decode($json), 0, true);
     $this->assertNotEmpty($returned_array);
+  }
+
+  public function testStrokeText() {
+    $image = imagecreatetruecolor(1, 1);
+    $color = imagecolorallocate($image, 200, 150, 100);
+    $font = "resources/NotoSansCJK-Regular.ttc";
+    $someNum = 42;
+    $this->utils->imagettfstroketext(
+                $image, $someNum, $someNum, $someNum, $someNum,
+                $color, $color, $font, "String", 1);
+    $this->assertInternalType('resource', $image);
+
   }
 
 }
