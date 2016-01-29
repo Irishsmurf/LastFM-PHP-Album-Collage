@@ -165,6 +165,22 @@ class LastFmTest extends PHPUnit_Framework_TestCase {
 
   }
 
+  public function testCreateCollage() {
+    $covers = array();
+    $canvas = $this->utils->createCollage(
+                      $covers, 0, 6, 3, 3, false, false);
+    $this->assertInternalType('resource', $canvas);
+    $canvas = $this->utils->createCollage(
+                      $covers, 1, 6, 3, 3, false, false);
+    $this->assertInternalType('resource', $canvas);
+    $canvas = $this->utils->createCollage(
+                      $covers, 2, 6, 3, 3, false, false);
+    $this->assertInternalType('resource', $canvas);
+    $canvas = $this->utils->createCollage(
+                      $covers, 3, 6, 3, 3, false, false);
+    $this->assertInternalType('resource', $canvas);
+  }
+
 }
 
 ?>

@@ -104,7 +104,7 @@ class Utils {
 
     $i = 1;
     //Grab images with cURL method.
-    $images = getImages($covers);
+    $images = Utils::getImages($covers);
 
     //For each image returned, create image object and write text
     foreach($images as $rawdata)
