@@ -1,5 +1,4 @@
 <?php
-require_once 'lib/curl.php';
 
 class CurlTest extends PHPUnit_Framework_TestCase{
   private $curl = null;
