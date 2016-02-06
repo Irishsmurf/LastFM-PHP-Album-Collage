@@ -3,7 +3,7 @@
 require_once 'lib/Utils.php';
 
 class StubCurl extends Curl {
-  public function _contruct() {
+  public function _construct() {
     $this->body = null;
     $this->data = null;
     $this->status = null;
@@ -82,16 +82,16 @@ class LastFmTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testGetAlbumsValid() {
-    $json_example = json_decode('{"topalbums": {
+    $jsonExample = json_decode('{"topalbums": {
                       "album": "hello"}}');
-    $album = Utils::getAlbums($json_example);
+    $album = Utils::getAlbums($jsonExample);
 
     $this->assertEquals($album, "hello");
   }
 
   public function testGetAlbumsInvalid() {
-    $json_example = json_decode('{"topalbums": 0}');
-    $album = Utils::getAlbums($json_example);
+    $jsonExample = json_decode('{"topalbums": 0}');
+    $album = Utils::getAlbums($jsonExample);
     $this->assertEquals($album, null);
   }
 
@@ -118,8 +118,8 @@ class LastFmTest extends PHPUnit_Framework_TestCase {
         {"#text":"ttp://www.website.com/noimage/large","size":"large"},
         {"#text":"http://www.website.com/noimage/xlarge","size":"extralarge"}],
         "@attr":{"rank":"1"}}]';
-    $returned_array = $this->utils->getArt(json_decode($json), 3);
-    $this->assertNull($returned_array);
+    $returnedArray = $this->utils->getArt(json_decode($json), 3);
+    $this->assertNull($returnedArray);
   }
 
   public function testGetArtValid() {
@@ -133,12 +133,12 @@ class LastFmTest extends PHPUnit_Framework_TestCase {
         {"#text":"ttp://www.website.com/some+url/large","size":"large"},
         {"#text":"http://www.website.com/some+url/xlarge","size":"extralarge"}],
         "@attr":{"rank":"1"}}]';
-    $returned_array = $this->utils->getArt(json_decode($json), 3);
-    $this->assertEquals($returned_array[0]['artist'], 'ArtistName');
-    $this->assertEquals($returned_array[0]['album'], 'AlbumName');
-    $this->assertEquals($returned_array[0]['mbid'], 'c9294302-9589-4859-a0ed-d82c65b017db');
-    $this->assertEquals($returned_array[0]['playcount'], '1000');
-    $this->assertEquals($returned_array[0]['url'], 'http://www.website.com/some+url/xlarge');
+    $returnedArray = $this->utils->getArt(json_decode($json), 3);
+    $this->assertEquals($returnedArray[0]['artist'], 'ArtistName');
+    $this->assertEquals($returnedArray[0]['album'], 'AlbumName');
+    $this->assertEquals($returnedArray[0]['mbid'], 'c9294302-9589-4859-a0ed-d82c65b017db');
+    $this->assertEquals($returnedArray[0]['playcount'], '1000');
+    $this->assertEquals($returnedArray[0]['url'], 'http://www.website.com/some+url/xlarge');
   }
 
   public function testGetArtInvalid() {
@@ -149,8 +149,8 @@ class LastFmTest extends PHPUnit_Framework_TestCase {
         "url":"http://www.last.fm/music/Brand+New"},"image":[
         {"#text":"noimage","size":"small"}],
         "@attr":{"rank":"1"}}]';
-    $returned_array = $this->utils->getArt(json_decode($json), 0, true);
-    $this->assertNotEmpty($returned_array);
+    $returnedArray = $this->utils->getArt(json_decode($json), 0, true);
+    $this->assertNotEmpty($returnedArray);
   }
 
   public function testStrokeText() {
