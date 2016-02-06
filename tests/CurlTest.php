@@ -11,12 +11,12 @@ class CurlTest extends PHPUnit_Framework_TestCase{
     $this->assertNull($body);
   }
 
-  public function testSetData_string(){
+  public function testSetDataString(){
     $instance = $this->curl->setData("Test Data");
     $this->assertEquals($instance->getData(), "Test Data");
   }
 
-  public function testSetData_array(){
+  public function testSetDataArray(){
     $array = array("some", "array");
     $instance = $this->curl->setData($array);
     $this->assertEquals($instance->getData(), http_build_query($array));
@@ -25,6 +25,33 @@ class CurlTest extends PHPUnit_Framework_TestCase{
   public function testGetStatus(){
     $status = $this->curl->getStatusCode();
     $this->assertNull($status);
+  }
+
+  public function testGetResource(){
+    $resource = $this->curl->getResource();
+    $this->assertInternalType('resource', $resource);
+  }
+
+  public function testGetType(){
+    $this->curl->setType('GET');
+    $type = $this->curl->getType();
+    $this->assertEquals('GET', $type);
+  }
+
+  public function testGetTypeFail(){
+    $this->curl->setType('PUT');
+    $type = $this->curl->getType();
+    $this->assertNotEquals('GET', $type);
+  }
+
+  public function testGetOption(){
+    $this->curl->setOption(CURLOPT_USERAGENT, "Something");
+    $resource = $this->curl->getResource();
+    $this->assertInternalType('resource', $resource);
+  }
+  public function testSendNull(){
+    $result = $this->curl->send();
+    $this->assertNull($result);
   }
 }
 

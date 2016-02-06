@@ -110,7 +110,7 @@ class Curl {
     */
 
     public function setOption($option, $value) {
-      curl_setopt($this->$ch, $option, $value);
+      curl_setopt($this->ch, $option, $value);
     }
 
     /**
