@@ -63,7 +63,7 @@ class CurlTest extends PHPUnit_Framework_TestCase{
     $this->curl->setType('PUT');
     $result = $this->curl->send();
     $resource->close();
-    $this->assertInternalType('resource', $resource);
+    $this->assertNull($resource);
   }
 }
 
