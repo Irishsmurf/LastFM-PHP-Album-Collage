@@ -62,9 +62,10 @@ class CurlTest extends PHPUnit_Framework_TestCase{
   public function testSendPut(){
     $this->curl->setUrl("some.domain.com");
     $this->curl->setType('PUT');
-    $result = $this->curl->send();
+    $this->curl->send();
     $this->curl->close();
-    $this->assertInternalType('resource', $result);
+    $status = $this->curl->getStatusCode();
+    $this->assertEquals('405', $status);
   }
 }
 
