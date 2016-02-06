@@ -53,6 +53,18 @@ class CurlTest extends PHPUnit_Framework_TestCase{
     $result = $this->curl->send();
     $this->assertNull($result);
   }
+
+  public function testGetUrl(){
+    $this->curl->setUrl("some.domain.com");
+    $this->assertEquals($this->curl->getUrl(), "some.domain.com");
+  }
+
+  public function testSendPut(){
+    $this->curl->setType('PUT');
+    $result = $this->curl->send();
+    $resource->close();
+    $this->assertInternalType('resource', $resource);
+  }
 }
 
 ?>
