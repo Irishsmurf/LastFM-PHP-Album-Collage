@@ -16,6 +16,12 @@ engines:
     enabled: true
   phpmd:
     enabled: true
+    checks:
+      CleanCode/StaticAccess:
+        enabled: false
+    exclude_fingerprints:
+      - 0c21d81e710f4914b2519d4dde776459
+      - 993dd9590fef4f2624e01b5836fb13e6
 ratings:
   paths:
   - "**.inc"

@@ -75,6 +75,7 @@ class LastFmTest extends PHPUnit_Framework_TestCase {
     );
     try {
       $result = $this->utils->getJson("some.api.com", $curl, true);
+      return $result;
     } catch(Exception $e) {
       echo $e;
       throw $e;
