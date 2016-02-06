@@ -5,7 +5,7 @@ php:
   - hhvm
 
 before_script: composer install
-script: phpunit --coverage-clover build/logs/clover.xml tests/LastFmTest.php --tap
+script: phpunit --coverage-clover build/logs/clover.xml tests --tap
 addons:
     code_climate:
         repo_token: 5717155e65136d205680957455ca51641afa257ec2481d4adba65c271dee25d0
