@@ -12,6 +12,8 @@ engines:
     exclude_fingerprints:
       - 96bc6b4c93d63046854622bc3d48ac53
       - 46e2087edf86c6edc1f061ee70ca84e5
+      - b2037d198136dfa1e6b0f5187a7cf74e
+      - b3af9fe452995ee88d2478216b5c8fcd
   fixme:
     enabled: true
   phpmd:
