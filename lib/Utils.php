@@ -43,16 +43,16 @@ class Utils {
     //Boolean to note if the downloads are still progressing.
     $running = null;
     $mhandler = curl_multi_init();
-    $i = 0;
+    $counter = 0;
     foreach($coverUrls as $url)
     {
-      $chs[$i] = curl_init($url['url']);
-      curl_setopt($chs[$i], CURLOPT_RETURNTRANSFER, true);
-      curl_setopt($chs[$i], CURLOPT_USERAGENT, 'www.paddez.com/lastfm/');
-      curl_setopt($chs[$i], CURLOPT_CONNECTTIMEOUT, 20);
-      curl_setopt($chs[$i], CURLOPT_TIMEOUT, 120);
-      curl_multi_add_handle($mhandler, $chs[$i]);
-      $i++;
+      $chs[$counter] = curl_init($url['url']);
+      curl_setopt($chs[$counter], CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($chs[$counter], CURLOPT_USERAGENT, 'www.paddez.com/lastfm/');
+      curl_setopt($chs[$counter], CURLOPT_CONNECTTIMEOUT, 20);
+      curl_setopt($chs[$counter], CURLOPT_TIMEOUT, 120);
+      curl_multi_add_handle($mhandler, $chs[$counter]);
+      $counter++;
     }
     do
     {
@@ -60,14 +60,14 @@ class Utils {
       curl_multi_select($mhandler);
     } while($running > 0);
 
-    $i = 0;
+    $counter = 0;
     $images = array();
     foreach($chs as $ch)
     {
-      $images[$i]['data'] = curl_multi_getcontent($ch);
-      $images[$i] = $coverUrls[$i];
+      $images[$counter]['data'] = curl_multi_getcontent($ch);
+      $images[$counter] = $coverUrls[$counter];
       curl_multi_remove_handle($mhandler, $ch);
-      $i++;
+      $counter++;
     }
 
     curl_multi_close($mhandler);
@@ -102,7 +102,7 @@ class Utils {
     $coords['x'] = 0;
     $coords['y'] = 0;
 
-    $i = 1;
+    $counter = 1;
     //Grab images with cURL method.
     $images = Utils::getImages($covers);
 
@@ -145,22 +145,21 @@ class Utils {
         $coords['x'] = 0;
       }
 
-      $i++;
+      $counter++;
 
     }
     return $canvas;
   }
 
-  function imagettfstroketext(&$image, $size, $angle, $x, $y, &$textcolor, &$strokecolor, $fontfile, $text, $px)
+  function imagettfstroketext(&$image, $size, $angle, $xSize, $ySize, &$textcolor, &$strokecolor, $fontfile, $text, $pixels)
   {
     /*
       Function to add shadow to text.
     */
-    for($c1 = ($x-abs($px)); $c1 <= ($x+abs($px)); $c1++)
-      for($c2 = ($y-abs($px)); $c2 <= ($y+abs($px)); $c2++)
+    for($c1 = ($xSize-abs($pixels)); $c1 <= ($xSize+abs($pixels)); $c1++)
+      for($c2 = ($ySize-abs($pixels)); $c2 <= ($ySize+abs($pixels)); $c2++)
         imagettftext($image, $size, $angle, $c1, $c2, $strokecolor, $fontfile, $text);
-
-    return imagettftext($image, $size, $angle, $x, $y, $textcolor, $fontfile, $text);
+    return imagettftext($image, $size, $angle, $xSize, $ySize, $textcolor, $fontfile, $text);
   }
 
   function getArt($albums, $quality)
