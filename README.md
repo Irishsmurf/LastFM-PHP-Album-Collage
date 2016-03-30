@@ -10,7 +10,7 @@ Uses S3 to store the images in a persistant manner without filling up the local 
 
 ---
 
-**Tested using `PHP 5.5` and requires `PHP-GD library` for building the images.**
+**Tested using `PHP 5.5` `PHP 5.6` `PHP 7.0` and requires `PHP-GD library` for building the images.**
 
 ---
 
