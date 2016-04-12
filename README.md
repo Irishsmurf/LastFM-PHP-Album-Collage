@@ -12,7 +12,7 @@ Fully supported to run on AWS Elastic Beanstalk
 
 ---
 
-**Tested using `PHP 5.5`, `PHP 7` and requires `PHP-GD library` for building the images.**
+**Tested using `PHP 5.6`, `PHP 7` and requires `PHP-GD library` for building the images.**
 
 ---
 
