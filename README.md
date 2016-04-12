@@ -8,9 +8,11 @@
 A Script that takes in `LastFM username` and collages their most played albums in a grid.
 Uses S3 to store the images in a persistant manner without filling up the local disk.
 
+Fully supported to run on AWS Elastic Beanstalk
+
 ---
 
-**Tested using `PHP 5.5` `PHP 5.6` `PHP 7.0` and requires `PHP-GD library` for building the images.**
+**Tested using `PHP 5.5`, `PHP 7` and requires `PHP-GD library` for building the images.**
 
 ---
 
