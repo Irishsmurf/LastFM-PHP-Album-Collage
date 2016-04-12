@@ -4,8 +4,6 @@ php:
   - '7.0'
   - hhvm
 
-install: composer require satooshi/php-coveralls
-
 before_script: composer install
 script: phpunit --coverage-clover build/logs/clover.xml tests --tap
 addons:
