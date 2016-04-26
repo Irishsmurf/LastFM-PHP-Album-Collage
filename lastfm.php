@@ -169,7 +169,7 @@ $result = $s3->putObject(array(
       'SourceFile'    => $filename,
       'ACL'        => 'public-read',
       'ContentType'    => 'image/jpeg',
-    'CacheControl'  =>  'max-age=16400'
+      'CacheControl'  =>  'max-age=16400'
       ));
 
 //delete file
