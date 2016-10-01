@@ -81,7 +81,7 @@ $url = substr($url, strpos($url, '?')+1);
 
 //Parses the $vars and assigns the values as in the URL. $name and $period expected here.
 parse_str($url);
-$request['user'] = $user;
+$request['user'] = trim($user);
 $request['period'] = $period;
 $request['cols'] = $cols;
 $request['rows'] = $rows;
